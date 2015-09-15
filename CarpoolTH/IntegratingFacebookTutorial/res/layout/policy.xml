@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="15dp">
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/policy"
+            android:id="@+id/textView"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:textSize="9pt"
+            android:textIsSelectable="false"
+            android:textColor="#010101" />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView"
+        android:layout_marginTop="20dp"
+        android:padding="20dp"
+        >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/term_01_head"
+                android:id="@+id/term_01_head"
+                android:textStyle="bold"
+                android:textSize="7pt" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/term_01_content"
+                android:id="@+id/term_01_content"
+                android:layout_marginTop="10dp"
+                android:textSize="6.5pt"
+                android:textIsSelectable="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/term_02_head"
+                android:id="@+id/term_02_head"
+                android:layout_marginTop="40dp"
+                android:textStyle="bold"
+                android:textSize="7pt" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/term_02_content"
+                android:id="@+id/term_02_content"
+                android:layout_marginTop="10dp"
+                android:textSize="6.5pt" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/term_02_content"
+                android:id="@+id/term_03_content"
+                android:layout_marginTop="10dp"
+                android:textSize="7pt" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/term_02_content"
+                android:id="@+id/term_04_content"
+                android:layout_marginTop="10dp"
+                android:textSize="6.5pt" />
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

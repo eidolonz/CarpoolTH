@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:gravity="center"
+        >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rider"
+                android:id="@+id/riderTV"
+                android:textStyle="bold"
+                android:textSize="25dp" />
+
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_margin="15dp"
+                android:id="@+id/riderPic"
+                android:layout_gravity="center"
+                android:src="@drawable/rider01"
+                android:scaleType="fitCenter"/>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:gravity="center">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/driver"
+                android:id="@+id/driverTV"
+                android:textStyle="bold"
+                android:textSize="25dp"/>
+
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_margin="15dp"
+                android:id="@+id/driverPic"
+                android:layout_gravity="center"
+                android:src="@drawable/driver"
+                android:scaleType="fitCenter"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Find driver"
+        android:layout_margin="10dp"
+        android:layout_marginTop="100dp"
+        android:id="@+id/riderBtn"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#ffffff"
+        android:background="#3786ff" />
+
+</LinearLayout>
