@@ -98,7 +98,7 @@ public class LoginActivity extends Activity {
   }
 
   private void showUserDetailsActivity() {
-    Intent intent = new Intent(this, com.parse.carpool.MainActivity.class);
+    Intent intent = new Intent(this, MainActivity.class);
     startActivity(intent);
       finish();
   }

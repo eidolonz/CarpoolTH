@@ -70,13 +70,13 @@ public class MatchMe extends Fragment{
     public void chooseDriver(){
         riderPic.setImageResource(R.drawable.rider);
         driverPic.setImageResource(R.drawable.driver01);
-        startBtn.setText("Find rider");
+        startBtn.setText("Create trip");
         isDriver = true;
     }
     public void chooseRider(){
         riderPic.setImageResource(R.drawable.rider01);
         driverPic.setImageResource(R.drawable.driver);
-        startBtn.setText("Find driver");
+        startBtn.setText("Find trip");
         isDriver = false;
     }
 
@@ -85,7 +85,15 @@ public class MatchMe extends Fragment{
         startActivity(intent);
     }
     public void findDriver(){
-        Intent intent = new Intent(getActivity(), FindDriver.class);
+        Intent intent = new Intent(getActivity(), FindDriver.class); //FindDriver.class
+        intent.putExtra("SetLatitudeDestination", "0");
+        intent.putExtra("SetLongitudeDestination", "0");
+        intent.putExtra("SetLatitudeSource", "0");
+        intent.putExtra("SetLongitudeSource", "0");
         startActivity(intent);
+
+
+
+
     }
 }

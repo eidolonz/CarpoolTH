@@ -2,6 +2,8 @@ package com.parse.carpool;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -25,6 +27,8 @@ import com.parse.integratingfacebooktutorial.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.net.URL;
 
 public class UserDetailsActivity extends Fragment {
 
@@ -99,12 +103,6 @@ public class UserDetailsActivity extends Fragment {
                   try {
                     userProfile.put("facebookId", jsonObject.getLong("id"));
                     userProfile.put("name", jsonObject.getString("name"));
-                    //userProfile.put("age", jsonObject.get("age_range"));
-								/*if (jsonObject.getString("email") != null)
-									userProfile.put("email", jsonObject.getString("email"));
-								if (jsonObject.getString("gender") != null)
-									userProfile.put("gender", jsonObject.getString("gender"));
-*/
 
                     // Save the user profile info in a user property
                     ParseUser currentUser = ParseUser.getCurrentUser();

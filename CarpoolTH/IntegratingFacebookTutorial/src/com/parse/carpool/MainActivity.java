@@ -26,26 +26,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
-import android.view.InflateException;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.astuetz.PagerSlidingTabStrip.IconTabProvider;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.integratingfacebooktutorial.R;
-
-import java.util.List;
 
 public class MainActivity extends FragmentActivity {
 
@@ -117,7 +104,7 @@ public class MainActivity extends FragmentActivity {
 public class MyPagerAdapter extends FragmentPagerAdapter implements IconTabProvider {
 
 	private final int[] ICONS = { R.drawable.home01, R.drawable.match01,
-			R.drawable.start01, R.drawable.profile01 };
+			R.drawable.profile01 };
 
 	public MyPagerAdapter(FragmentManager fm) {
 		super(fm);
@@ -152,29 +139,10 @@ public class MyPagerAdapter extends FragmentPagerAdapter implements IconTabProvi
 		switch (position) {
 			case 0: return  new Home();
 			case 1: return new MatchMe();
-			case 2: return new StartTrip();
-			case 3: return new UserDetailsActivity();
+			case 2: return new UserDetailsActivity();
 			default: return new Home();
 		}
 	}
 }
-public static class StartTrip extends Fragment {
-	private static View view;
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		if (view != null) {
-			ViewGroup parent = (ViewGroup) view.getParent();
-			if (parent != null)
-				parent.removeView(view);
-		}
-		try{
-			view = inflater.inflate(R.layout.start_trip,container,false);
-		}catch (InflateException e){
-			/* map is already there, just return view as it is */
-		}
-		return view;
-	}
 
-
-}
 }

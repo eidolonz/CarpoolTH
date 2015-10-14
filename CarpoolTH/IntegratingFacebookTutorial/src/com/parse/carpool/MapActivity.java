@@ -7,14 +7,12 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -31,14 +29,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
 import com.parse.integratingfacebooktutorial.R;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -50,7 +42,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public class MapActivity extends ActionBarActivity {
 
@@ -68,69 +59,68 @@ public class MapActivity extends ActionBarActivity {
     final int PLACES_DETAILS=1;
     final ArrayList<Marker> markerList = new ArrayList<Marker>();
     final ArrayList<Marker> markerList2 = new ArrayList<Marker>();
-    final ArrayList<Float>  destination = new ArrayList<Float>();
-
+    final ArrayList<Double>  destination = new ArrayList<Double>();
+    final ArrayList<Double>  source = new ArrayList<Double>();
     boolean statusOfGPS;
     GPSTracker gpsLocation ;
     protected double latitudeGPS = 0;
     protected double longitudeGPS = 0;
-
+    private String getReference ;
     private Button saveBtn;
-    private Button updateBtn;
+    protected  String _nameReference;
+    protected  String _nameUser;
+    protected  String _phonenumber;
+    protected  String getCurrentLocationName;
+    protected  String getDestinationLocationName;
+    private String sourceDetail;
+    private String destinationDetail;
+    public MapActivity() {
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-
-        updateBtn = (Button) findViewById(R.id.updateLocation);
-        updateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final ParseUser currentUser = ParseUser.getCurrentUser();
-                ParseQuery<ParseObject> query = ParseQuery.getQuery("CreateTrip");
-                String userId = currentUser.getObjectId();
-
-                // Retrieve the object by id
-                query.getInBackground(userId, new GetCallback<ParseObject>() {
-                                public void done(ParseObject data, ParseException e) {
-                                    if (e == null) {
-                                        // Now let's update it with some new data. In this case, only cheatMode and score
-                                        // will get sent to the Parse Cloud. playerName hasn't changed.
-                                        data.put("UserID", currentUser);
-                                        data.saveInBackground();
-                        }
-                    }
-                });
-
-                Toast.makeText(getApplicationContext(), "UserId: " + userId, Toast.LENGTH_SHORT).show();
-
-            }
-        });
 
         //saveLocation Button
         saveBtn = (Button) findViewById(R.id.saveLocation);
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+            if (sourceDetail == null){
+                Toast.makeText(getApplicationContext(),
+                        "Please enter pickup location", Toast.LENGTH_LONG).show();
+            }else if (destinationDetail == null){
+                Toast.makeText(getApplicationContext(),
+                        "Please enter destination location", Toast.LENGTH_LONG).show();
+            }else{
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                if( destination.get(0) != null && source.get(0) !=null) {
+                    String getLatitudeDestination = destination.get(0).toString();
+                    String getLongitudeDestination = destination.get(1).toString();
+                    intent.putExtra("SetLatitudeDestination", getLatitudeDestination);
+                    intent.putExtra("SetLongitudeDestination", getLongitudeDestination);
 
-                try {
-                ParseUser currentUser = ParseUser.getCurrentUser();
-                ParseObject dataObject = new ParseObject("CreateTrip");
+                    String getLatitudeSource = source.get(0).toString();
+                    String getLongitudeSource = source.get(1).toString();
+                    intent.putExtra("SetLatitudeSource", getLatitudeSource);
+                    intent.putExtra("SetLongitudeSource", getLongitudeSource);
+                }
 
-                JSONObject obj = new JSONObject();
-                JSONObject json = new JSONObject();
-                    obj.put("Latitude",latitudeGPS);
-                    obj.put("Longitude", longitudeGPS);
-                    json.put("Location", obj);
-                dataObject.put("CreateBy", currentUser);
-                dataObject.put("Location", obj);
-                dataObject.saveInBackground();
-                //display in short period of time
-                Toast.makeText(getApplicationContext(), "Latitude:" + latitudeGPS + "\n Longitude:" + longitudeGPS, Toast.LENGTH_SHORT).show();
 
-                }catch (Exception e){}
+                intent.putExtra("sourceDetail", sourceDetail);
+                intent.putExtra("destinationDetail", destinationDetail);
+
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)     ;
+                intent.setClass(getApplicationContext(), StartTrip.class);
+                startActivity(intent);
+                finish();
+
+            }
             }
         });
+
+
         // Getting a reference to the AutoCompleteTextView
         atvPlaces = (AutoCompleteTextView) findViewById(R.id.atv_places);
         atvPlaces.setThreshold(1);
@@ -217,6 +207,7 @@ public class MapActivity extends ActionBarActivity {
             public void beforeTextChanged(CharSequence s, int start, int count,
                                           int after) {
                 // TODO Auto-generated method stub
+
             }
 
             @Override
@@ -248,7 +239,7 @@ public class MapActivity extends ActionBarActivity {
                 SimpleAdapter adapter = (SimpleAdapter) arg0.getAdapter();
 
                 HashMap<String, String> hm = (HashMap<String, String>) adapter.getItem(index);
-
+                sourceDetail = hm.get("description");
                 // Creating a DownloadTask to download Places details of the selected place
                 placeDetailsDownloadTask = new DownloadTask(PLACES_DETAILS);
 
@@ -273,6 +264,7 @@ public class MapActivity extends ActionBarActivity {
                 SimpleAdapter adapter = (SimpleAdapter) arg0.getAdapter();
 
                 HashMap<String, String> hm = (HashMap<String, String>) adapter.getItem(index);
+                destinationDetail = hm.get("description");
 
                 // Creating a DownloadTask to download Places details of the selected place
                 placeDetailsDownloadTask = new DownloadTask(PLACES_DETAILS);
@@ -296,6 +288,7 @@ public class MapActivity extends ActionBarActivity {
         super.onResume();
         setUpMapIfNeeded();
     }
+
 
     private void checkEnableGPS() {
         LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -398,8 +391,9 @@ public class MapActivity extends ActionBarActivity {
         // Obtain browser key from https://code.google.com/apis/console
         String key = "key=AIzaSyDkptSTTbdpJUuVfCsdXMt08eOc-R__6dw";
 
+        getReference = ref;
         // reference of place
-        String reference = "reference="+ref;
+        String reference = "reference="+ getReference;
 
         // Sensor enabled
         String sensor = "sensor=false";
@@ -590,19 +584,28 @@ public class MapActivity extends ActionBarActivity {
                             markerList.get(0).remove();
                             markerList.remove(0);
                         }
+
+                        if ( source.size() >0){
+                            source.remove(0);
+                            source.remove(1);
+                            source.clear();
+
+                        }
+
                         atvPlacesChecking = false;
                         LatLng point = new LatLng(latitudeStart, longitudeStart);
                         String name = "start";
                         MarkerOptions options = new MarkerOptions().title(name);
                         options.position(point);
                         options.snippet("Latitude:" + latitudeStart + ",Longitude:" + longitudeStart);
-
                         options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)) ;
                         // Adding the marker in the Google Map
                         Marker marker = googleMap.addMarker(options);
                         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitudeStart, longitudeStart), 13));
                         markerList.add(marker);
                         markerList.contains(marker);
+                        source.add((double) latitudeStart);
+                        source.add((double) longitudeStart);
                     }
                     else if (atvPlacesChecking2 == true){
 
@@ -634,8 +637,8 @@ public class MapActivity extends ActionBarActivity {
                         options.position(point);
                         options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)) ;
                         options.snippet("Latitude:" + latitudeDestination + ",Longitude:" + longitudeDestination);
-                        destination.add((float) latitudeDestination);
-                        destination.add((float) longitudeDestination);
+                        destination.add((double) latitudeDestination);
+                        destination.add((double) longitudeDestination);
                         // Adding the marker in the Google Map
                         Marker marker = googleMap.addMarker(options);
                         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitudeDestination, longitudeDestination), 13));

@@ -29,8 +29,7 @@ public class SplashScreen extends Activity {
             @Override
             public void run() {
                 finish();
-                Intent goMain = new Intent(getApplicationContext(),
-                        LoginActivity.class);
+                Intent goMain = new Intent(getApplicationContext(),LoginActivity.class);
                 startActivity(goMain);
             }
         }, 5000);

@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#dddedd"
+    android:scrollbars="none"
+    android:padding="10dp">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal">
+
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Travel Daily"
+                android:checked="true"
+                android:textOff="No"
+                android:textOn="Yes"
+                android:id="@+id/dailySwitch" />
+
+            <TableRow
+                android:id="@+id/dailyOn">
+                <ToggleButton
+                    android:layout_width="48dp"
+                    android:id="@+id/su"
+                    android:textOn="Su"
+                    android:textOff="Su"/>
+                <ToggleButton
+                    android:layout_width="48dp"
+                    android:id="@+id/mo"
+                    android:checked="true"
+                    android:textOn="Mo"
+                    android:textOff="Mo"/>
+                <ToggleButton
+                    android:layout_width="48dp"
+                    android:id="@+id/tu"
+                    android:checked="true"
+                    android:textOn="Tu"
+                    android:textOff="Tu"/>
+                <ToggleButton
+                    android:layout_width="48dp"
+                    android:id="@+id/we"
+                    android:checked="true"
+                    android:textOn="We"
+                    android:textOff="We"/>
+                <ToggleButton
+                    android:layout_width="48dp"
+                    android:id="@+id/th"
+                    android:checked="true"
+                    android:textOn="Th"
+                    android:textOff="Th"/>
+                <ToggleButton
+                    android:layout_width="48dp"
+                    android:id="@+id/fr"
+                    android:checked="true"
+                    android:textOn="Fr"
+                    android:textOff="Fr"/>
+                <ToggleButton
+                    android:layout_width="48dp"
+                    android:id="@+id/sa"
+                    android:textOn="Sa"
+                    android:textOff="Sa"/>
+            </TableRow>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp"
+                android:padding="5dp"
+                android:id="@+id/dailyOff"
+                android:background="#fff"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="I will travel on:       "
+                    android:textSize="15sp"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="20 sep 2015"
+                    android:textSize="15sp"
+                    android:textStyle="bold"/>
+
+            </LinearLayout>
+
+        </TableLayout>
+        <Button
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Set location"
+            android:id="@+id/setLocationBtn"
+            android:background="#fff"/>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="#fff"
+            android:padding="5dp"
+            android:id="@+id/location"
+            android:clickable="true">
+            <TableRow>
+                <TextView
+                    android:id="@+id/sourceTV"
+                    android:text="Source: "
+                    android:singleLine="true"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/destinationTV"
+                    android:text="Destination: "
+                    android:singleLine="true"/>
+            </TableRow>
+        </TableLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <TableLayout
+                android:layout_width="175dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#FFF">
+                <TableRow
+                    android:gravity="center"
+                    android:padding="5dp">
+                    <TextView
+                        android:text="Start Time"
+                        android:textStyle="bold"/>
+                </TableRow>
+                <TableRow
+                    android:gravity="center"
+                    android:padding="10dp">
+                    <TextView
+                        android:id="@+id/setStartTime"
+                        android:text="06:30 Hrs"
+                        android:clickable="true"
+                        />
+
+                </TableRow>
+            </TableLayout>
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="10dp"
+                android:background="#FFF">
+                <TableRow
+                    android:gravity="center"
+                    android:padding="5dp">
+                    <TextView
+                        android:text="Return Time"
+                        android:textStyle="bold"/>
+                </TableRow>
+                <TableRow
+                    android:gravity="center"
+                    android:padding="10dp">
+                    <TextView android:text="17:30 Hrs"/>
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFF"
+            android:layout_marginTop="10dp">
+            <TableRow
+                android:gravity="center">
+                <TextView
+                    android:text="Trip Detail"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/infoRow1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:gravity="center_vertical">
+                <ImageView
+                    android:layout_height="30dp"
+                    android:layout_width="30dp"
+                    android:src="@drawable/ic_smoke"/>
+                <Switch
+                    android:id="@+id/ciga"
+                    android:text="Allow Smoking?"
+                    android:checked="true"
+                    android:textOff="No"
+                    android:textOn="Yes"
+                    android:gravity="right"
+                    />
+
+            </TableRow>
+            <TableRow
+                android:id="@+id/infoRow2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:gravity="center_vertical">
+                <ImageView
+                    android:layout_height="30dp"
+                    android:layout_width="30dp"
+                    android:src="@drawable/ic_money"/>
+                <LinearLayout
+                    android:layout_width="260dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="right">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/money_TV"
+                        android:text="10 Baht"
+                        android:layout_marginRight="20dp"/>
+                    <Button
+                        android:id="@+id/addMoneyBtn"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:text="+"/>
+
+                    <Button
+                        android:id="@+id/subMoneyBtn"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:text="-"/>
+
+                </LinearLayout>
+            </TableRow>
+            <TableRow
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:padding="5dp">
+                <ImageView
+                    android:layout_height="30dp"
+                    android:layout_width="30dp"
+                    android:gravity="center"
+                    android:src="@drawable/ic_max_passenger" />
+                <LinearLayout
+                    android:layout_width="260dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="right">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/co_TV"
+                        android:text="1"
+                        android:layout_marginRight="20dp"/>
+                    <Button
+                        android:id="@+id/addPassBtn"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:text="+"/>
+
+                    <Button
+                        android:id="@+id/subPassBtn"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:text="-"/>
+                </LinearLayout>
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/infoRow3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:gravity="center_vertical">
+                <ImageView
+                    android:layout_height="30dp"
+                    android:layout_width="30dp"
+                    android:src="@drawable/ic_car"/>
+                <EditText
+                    android:id="@+id/carType"
+                    android:layout_marginLeft="10dp"
+                    android:hint="กรอกรุ่นรถ และ ทะเบียนรถ"/>
+            </TableRow>
+            <TableRow
+                android:id="@+id/infoRow4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:gravity="center_vertical">
+                <ImageView
+                    android:layout_height="30dp"
+                    android:layout_width="30dp"
+                    android:src="@drawable/ic_phone"/>
+                <EditText
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/tel"
+                    android:hint="กรอกเบอร์ติดต่อ"
+                    android:inputType="phone" />
+            </TableRow>
+            <TableRow
+                android:id="@+id/infoRow5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:gravity="center_vertical">
+                <ImageView
+                    android:layout_height="30dp"
+                    android:layout_width="30dp"
+                    android:src="@drawable/ic_gmail"/>
+                <EditText
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/email"
+                    android:hint="กรอกอีเมลล์"
+                    android:inputType="textEmailAddress" />
+            </TableRow>
+            <TableRow
+                android:id="@+id/infoRow6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp">
+                <ImageView
+                    android:layout_height="30dp"
+                    android:layout_width="30dp"
+                    android:src="@drawable/ic_description"/>
+                <EditText
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/description"
+                    android:hint="Notes to passenger"/>
+            </TableRow>
+
+        </TableLayout>
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="#15b0ff"
+            android:id="@+id/create_trip"
+            android:text="CREATE TRIP"/>
+    </LinearLayout>
+</ScrollView>
