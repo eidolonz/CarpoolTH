@@ -119,15 +119,16 @@ public class Home extends Fragment {
                                     int position, long id) {
 
                 // ListView Clicked item index
-                int itemPosition     = position;
+                int itemPosition = position;
 
                 // ListView Clicked item value
-                String  itemValue    = (String) listView.getItemAtPosition(position);
+                String itemValue = (String) listView.getItemAtPosition(position);
                 // Show Alert
                 Toast.makeText(getActivity(),
                         "Position :" + itemPosition + "  ListItem : " + itemValue, Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(getActivity(), TripDetail.class);
                 startActivity(intent);
+
 
             }
 

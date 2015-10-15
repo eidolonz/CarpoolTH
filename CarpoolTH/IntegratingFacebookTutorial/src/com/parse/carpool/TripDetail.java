@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.login.widget.ProfilePictureView;
 import com.parse.FindCallback;
@@ -151,9 +152,15 @@ public class TripDetail extends ActionBarActivity {
             cancelBtn.setVisibility(Button.VISIBLE);
         }
 
-
+        String userId = "000";
         ParseObject userPointer = tripDetail.getCreateBy();
-        String userId = userPointer.getObjectId();
+        if(userPointer != null) {
+            userId = userPointer.getObjectId();
+        }else{
+            Toast.makeText(this,
+                    "This trip is missing!", Toast.LENGTH_LONG).show();
+            backToMain();
+        }
 
         if( currentUser.getObjectId().equals(userId) ) {
             this.isOwner = true;
@@ -429,9 +436,7 @@ public class TripDetail extends ActionBarActivity {
             }
 
         });
-        Intent i = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(i);
-        finish();
+        backToMain();
     }
 
     public void deleteTrip(boolean confirm){
@@ -464,23 +469,22 @@ public class TripDetail extends ActionBarActivity {
                         try {
                             object.delete();
                             object.saveInBackground();
-                        }catch (Exception ex){}
+                        } catch (Exception ex) {
+                        }
                     }
                 }
 
             });
-            Intent i = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(i);
-            finish();
+            backToMain();
         }
     }
 
-    public void joinTrip(){
+    public void joinTrip() {
         final ParseQuery<ParseObject> query = ParseQuery.getQuery("CreateTrip");
         query.getInBackground(tripDetail.getObjectId(), new GetCallback<ParseObject>() {
             @Override
             public void done(final ParseObject object, ParseException e) {
-                if (e == null){
+                if (e == null) {
                     HashMap hm = (HashMap) tripDetail.getPassengerId();
                     HashMap userDetail = new HashMap();
                     if (hm == null) {
@@ -490,7 +494,6 @@ public class TripDetail extends ActionBarActivity {
                     userDetail.put("FacebookId", userId);
                     userDetail.put("UserId", currentUser);
                     userDetail.put("Name", passengerName);
-
 
 
                     hm.put("PassengerId" + hm.size(), userDetail);
@@ -504,7 +507,7 @@ public class TripDetail extends ActionBarActivity {
                 user.getInBackground(currentUser.getObjectId(), new GetCallback<ParseObject>() {
                     @Override
                     public void done(ParseObject parseObject, ParseException e) {
-                        if (e==null){
+                        if (e == null) {
                             object.put("Trip", tripDetail.getObjectId());
                             object.saveInBackground();
                         }
@@ -513,10 +516,14 @@ public class TripDetail extends ActionBarActivity {
             }
         });
 
+        backToMain();
+
+    }
+
+    public void backToMain() {
         Intent i = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(i);
         finish();
-
     }
 
     private void updateViewsWithProfileInfo() {
