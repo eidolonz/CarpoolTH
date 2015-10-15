@@ -137,7 +137,7 @@ public class TripDetail extends ActionBarActivity {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteTrip();
+                deleteTrip(false);
             }
         });
 
@@ -398,14 +398,14 @@ public class TripDetail extends ActionBarActivity {
         query.getInBackground(tripDetail.getObjectId(), new GetCallback<ParseObject>() {
             @Override
             public void done(final ParseObject object, ParseException e) {
-                if (e == null){
+                if (e == null) {
                     HashMap hm = (HashMap) tripDetail.getPassengerId();
 
-                    while(hm.size() >= position && position < 6 ){
-                        int nextPos = position +1;
-                        if(nextPos == hm.size()){
+                    while (hm.size() >= position && position < 6) {
+                        int nextPos = position + 1;
+                        if (nextPos == hm.size()) {
                             hm.remove("PassengerId" + position);
-                        }else{
+                        } else {
                             hm.put("PassengerId" + position, hm.get("PassengerId" + nextPos));
                             hm.remove("PassengerId" + nextPos);
                         }
@@ -420,7 +420,7 @@ public class TripDetail extends ActionBarActivity {
                 user.getInBackground(currentUser.getObjectId(), new GetCallback<ParseObject>() {
                     @Override
                     public void done(ParseObject parseObject, ParseException e) {
-                        if (e==null){
+                        if (e == null) {
                             object.remove("Trip");
                             object.saveInBackground();
                         }
@@ -434,26 +434,45 @@ public class TripDetail extends ActionBarActivity {
         finish();
     }
 
-    public void deleteTrip(){
-        AlertDialog.Builder builder1 = new AlertDialog.Builder(getApplicationContext());
-        builder1.setMessage("Are you sure you want to delete this trip?\n" +
-                "There is no undo!");
-        builder1.setCancelable(true);
-        builder1.setPositiveButton("Yes",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        builder1.setNegativeButton("No",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
+    public void deleteTrip(boolean confirm){
+        if(!confirm) {
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+            builder1.setMessage("Are you sure you want to delete this trip?\n" +
+                    "There is no undo!");
+            builder1.setCancelable(true);
+            builder1.setPositiveButton("Yes",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            deleteTrip(true);
+                        }
+                    });
+            builder1.setNegativeButton("No",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
 
-        AlertDialog alert11 = builder1.create();
-        alert11.show();
+            AlertDialog alert11 = builder1.create();
+            alert11.show();
+        }else{
+            final ParseQuery<ParseObject> query = ParseQuery.getQuery("CreateTrip");
+            query.getInBackground(tripDetail.getObjectId(), new GetCallback<ParseObject>() {
+                @Override
+                public void done(final ParseObject object, ParseException e) {
+                    if (e == null) {
+                        try {
+                            object.delete();
+                            object.saveInBackground();
+                        }catch (Exception ex){}
+                    }
+                }
+
+            });
+            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(i);
+            finish();
+        }
     }
 
     public void joinTrip(){
