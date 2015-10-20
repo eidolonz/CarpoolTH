@@ -87,7 +87,7 @@ public class LoginActivity extends Activity {
             } else if (user.isNew()) {
                 Log.d(IntegratingFacebook.TAG, "User signed up and logged in through Facebook!");
                 Toast.makeText(getApplicationContext(), "Register with Facebook...", Toast.LENGTH_SHORT).show();
-                showUserDetailsActivity();
+                register();
             } else {
                 Log.d(IntegratingFacebook.TAG, "User logged in through Facebook!");
                 Toast.makeText(getApplicationContext(), "Login successfully...", Toast.LENGTH_SHORT).show();
@@ -96,6 +96,11 @@ public class LoginActivity extends Activity {
         }
     });
   }
+    private  void register(){
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
   private void showUserDetailsActivity() {
     Intent intent = new Intent(this, MainActivity.class);

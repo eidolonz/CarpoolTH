@@ -150,6 +150,7 @@ public class UserDetailsActivity extends Fragment {
 
   private void updateViewsWithProfileInfo() {
     ParseUser currentUser = ParseUser.getCurrentUser();
+    currentUser.fetchInBackground();
     if (currentUser.has("profile")) {
       JSONObject userProfile = currentUser.getJSONObject("profile");
       try {
@@ -167,12 +168,7 @@ public class UserDetailsActivity extends Fragment {
           userNameView.setText("");
         }
 
-        if (userProfile.has("age")) {
-          userAgeView.setText(userProfile.getString("age"));
-        }else{
-          userAgeView.setText("No age");
-        }
-
+        /*
         if (userProfile.has("email")) {
           userEmailView.setText(userProfile.getString("email"));
         } else {
@@ -183,7 +179,11 @@ public class UserDetailsActivity extends Fragment {
           userGenderView.setText(userProfile.getString("gender"));
         } else {
           userGenderView.setText("no gen");
-        }
+        }*/
+        String a = currentUser.getString("email");
+        String b = currentUser.getString("gender");
+        userEmailView.setText(currentUser.getString("email"));
+        userGenderView.setText(currentUser.getString("gender"));
 
 
       } catch (JSONException e) {

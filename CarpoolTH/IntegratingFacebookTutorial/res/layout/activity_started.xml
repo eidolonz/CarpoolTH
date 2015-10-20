@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:id="@+id/driverList"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@android:color/transparent"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="#CCCCCC"
+            android:dividerHeight="1dp"
+            android:paddingLeft="2dp" >
+        </ListView>
+
+        <fragment
+            android:id="@+id/map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/atv_places"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" >
+
+        </fragment>
+
+
+        <Button
+            android:id="@+id/pickUpBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="I already picked up"
+            android:background="#55ff55"
+            android:layout_marginTop="5dp"/>
+        <Button
+            android:id="@+id/safeBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="I have a safe trip"
+            android:background="#55ff55"
+            android:layout_marginTop="5dp"/>
+        <Button
+            android:id="@+id/reportBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Report"
+            android:background="#ff5555"
+            android:layout_marginTop="5dp"/>
+
+    </LinearLayout>
+
+</ScrollView>

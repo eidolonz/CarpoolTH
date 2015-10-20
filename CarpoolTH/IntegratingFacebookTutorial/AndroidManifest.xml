@@ -119,6 +119,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
+        <activity
+            android:name="com.parse.carpool.RegisterActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
         <activity android:name="com.parse.carpool.TripDetail"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
