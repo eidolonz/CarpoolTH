@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +54,7 @@ public class TripDetail extends ActionBarActivity {
 
     LinearLayout travelDaily;
     LinearLayout travelOn;
+    ScrollView sv_container;
 
     RoundImage roundImage;
     ImageView sun;
@@ -118,6 +120,9 @@ public class TripDetail extends ActionBarActivity {
 
         getCurrentDetail();
         getTripDetail();
+
+        sv_container = (ScrollView)findViewById(R.id.sv_container);
+
 
         joinBtn = (Button) findViewById(R.id.joinBtn);
         joinBtn.setOnClickListener(new View.OnClickListener() {
@@ -205,7 +210,13 @@ public class TripDetail extends ActionBarActivity {
 
         if(googleMap == null) {
 
-            googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+            googleMap = ((WorkaroundMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+            ((WorkaroundMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).setListener(new WorkaroundMapFragment.OnTouchListener(){
+                @Override
+                public void onTouch() {
+                    sv_container.requestDisallowInterceptTouchEvent(true);
+                }
+            });
 
             googleMap.setMyLocationEnabled(true);
             if (googleMap != null) {
@@ -604,3 +615,5 @@ private void getTripDetail(){
 
 
 }
+
+
