@@ -8,12 +8,8 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
@@ -21,21 +17,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.login.widget.ProfilePictureView;
-import com.parse.FindCallback;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 import com.parse.integratingfacebooktutorial.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 
 /**
@@ -87,6 +87,9 @@ public class TripDetail extends ActionBarActivity {
     Button cancelBtn;
     Button deleteBtn;
 
+    GoogleDirection gd;
+    Document mDoc;
+    GoogleMap googleMap;
 
     private String tripId;
     private boolean isDaily = true;
@@ -179,6 +182,7 @@ public class TripDetail extends ActionBarActivity {
         mail = (TextView) findViewById(R.id.email);
         description = (TextView) findViewById(R.id.description);
 
+
         name.setText(tripDetail.getName());
         sourceTV.setText(tripDetail.getSource());
         destinationTV.setText(tripDetail.getDestination());
@@ -192,10 +196,56 @@ public class TripDetail extends ActionBarActivity {
         userProfilePictureView = (ProfilePictureView) findViewById(R.id.userProfilePicture);
         //Fetch Facebook user info if it is logged
         updateViewsWithProfileInfo();
+        setUpMapIfNeeded();
 
     }
 
-    private void getTripDetail(){
+
+    protected  void setUpMapIfNeeded() {
+
+        if(googleMap == null) {
+
+            googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+
+            googleMap.setMyLocationEnabled(true);
+            if (googleMap != null) {
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(13.65098, 100.491611), 13));
+                gd = new GoogleDirection(this);
+
+                gd.setLogging(true);
+                gd.request(new LatLng(13.65098, 100.491611), new LatLng(13.738622, 100.530947), GoogleDirection.MODE_DRIVING);
+                gd.setOnDirectionResponseListener(new GoogleDirection.OnDirectionResponseListener() {
+                    public void onResponse(String status, Document doc, GoogleDirection gd) {
+                        mDoc = doc;
+                        googleMap.addPolyline(gd.getPolyline(doc, 3, Color.RED));
+                        googleMap.addMarker(new MarkerOptions().position(new LatLng(13.65098, 100.491611))
+                                .icon(BitmapDescriptorFactory.defaultMarker(
+                                        BitmapDescriptorFactory.HUE_GREEN)));
+
+                        googleMap.addMarker(new MarkerOptions().position(new LatLng(13.738622, 100.530947))
+                                .icon(BitmapDescriptorFactory.defaultMarker(
+                                        BitmapDescriptorFactory.HUE_GREEN)));
+                        gd.request(new LatLng(13.65098, 100.491611), new LatLng(13.738622, 100.530947), GoogleDirection.MODE_DRIVING);
+
+
+                    }
+                });
+
+            }
+        }
+        googleMap.setMyLocationEnabled(true);
+    }
+
+
+
+
+
+
+
+
+
+
+private void getTripDetail(){
         try {
             ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("CreateTrip");
             query.whereEqualTo("objectId", tripId);
@@ -549,6 +599,8 @@ public class TripDetail extends ActionBarActivity {
         }*/
 
     }
+
+
 
 
 }
