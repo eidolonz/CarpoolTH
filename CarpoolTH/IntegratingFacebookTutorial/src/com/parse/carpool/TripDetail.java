@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.facebook.login.widget.ProfilePictureView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -108,7 +107,14 @@ public class TripDetail extends ActionBarActivity {
     private int position;
     private boolean isFull;
     private boolean isOwner;
+<<<<<<< HEAD
     private boolean isRun = false;
+=======
+    private double latSource = 0.00;
+    private double longSource = 0.00;
+    private double latDes = 0.00;
+    private double longDes = 0.00;
+>>>>>>> 3f4befee8171083088cf20a3cd823a614be17678
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -213,6 +219,7 @@ public class TripDetail extends ActionBarActivity {
     }
 
 
+<<<<<<< HEAD
     protected  void setUpMapIfNeeded() {
 
         if(googleMap == null && !this.isRun) {
@@ -233,6 +240,8 @@ public class TripDetail extends ActionBarActivity {
                 gd.setLogging(true);
 
                     gd.request(new LatLng(13.65098, 100.491611), new LatLng(13.738622, 100.530947), GoogleDirection.MODE_DRIVING);
+=======
+>>>>>>> 3f4befee8171083088cf20a3cd823a614be17678
 
                     gd.setOnDirectionResponseListener(new GoogleDirection.OnDirectionResponseListener() {
                         public void onResponse(String status, Document doc, GoogleDirection gd) {
@@ -251,12 +260,15 @@ public class TripDetail extends ActionBarActivity {
                             }
                         });
 
+<<<<<<< HEAD
 
             }
         }
         googleMap.setMyLocationEnabled(true);
     }
 
+=======
+>>>>>>> 3f4befee8171083088cf20a3cd823a614be17678
 
 
 
@@ -273,6 +285,13 @@ private void getTripDetail(){
             ob = query.find();
             for (ParseObject trips : ob) {
                 tripDetail.setCreateBy(trips.getParseObject("CreateBy"));
+
+                if(trips.get("LatitudeSource") != null && trips.get("LongitudeSource") != null && trips.get("LatitudeDestination") != null && trips.get("LongitudeDestination") != null  ){
+                    this.latSource = Double.parseDouble(trips.get("LatitudeSource").toString());
+                    this.longSource = Double.parseDouble(trips.get("LongitudeSource").toString());
+                    this.latDes = Double.parseDouble(trips.get("LatitudeDestination").toString());
+                    this.longDes = Double.parseDouble(trips.get("LatitudeDestination").toString());
+                }
 
                 if(trips.get("daily") != null){
                     this.isDaily = true;
@@ -626,7 +645,46 @@ private void getTripDetail(){
 
     }
 
+    protected  void setUpMapIfNeeded() {
 
+        if(googleMap == null) {
+
+            googleMap = ((WorkaroundMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+            ((WorkaroundMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).setListener(new WorkaroundMapFragment.OnTouchListener(){
+                @Override
+                public void onTouch() {
+                    sv_container.requestDisallowInterceptTouchEvent(true);
+                }
+            });
+
+            googleMap.setMyLocationEnabled(true);
+            if (googleMap != null) {
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(13.65098, 100.491611), 13));
+                gd = new GoogleDirection(this);
+
+                gd.setLogging(true);
+                gd.request(new LatLng(latSource, longSource), new LatLng(latDes, longDes), GoogleDirection.MODE_DRIVING);
+                gd.setOnDirectionResponseListener(new GoogleDirection.OnDirectionResponseListener() {
+                    public void onResponse(String status, Document doc, GoogleDirection gd) {
+                        mDoc = doc;
+                        googleMap.addPolyline(gd.getPolyline(doc, 3, Color.RED));
+                        googleMap.addMarker(new MarkerOptions().position(new LatLng(latSource, longSource))
+                                .icon(BitmapDescriptorFactory.defaultMarker(
+                                        BitmapDescriptorFactory.HUE_GREEN)));
+
+                        googleMap.addMarker(new MarkerOptions().position(new LatLng(latDes, longDes))
+                                .icon(BitmapDescriptorFactory.defaultMarker(
+                                        BitmapDescriptorFactory.HUE_GREEN)));
+                        gd.request(new LatLng(latSource, longSource), new LatLng(latDes, longDes), GoogleDirection.MODE_DRIVING);
+
+
+                    }
+                });
+
+            }
+        }
+        googleMap.setMyLocationEnabled(true);
+    }
 
 
 }
