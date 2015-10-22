@@ -112,7 +112,7 @@ public class MapActivity extends ActionBarActivity {
                 intent.putExtra("destinationDetail", destinationDetail);
 
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)     ;
-                intent.setClass(getApplicationContext(), StartTrip.class);
+                intent.setClass(getApplicationContext(), CreateTrip.class);
                 startActivity(intent);
                 finish();
 

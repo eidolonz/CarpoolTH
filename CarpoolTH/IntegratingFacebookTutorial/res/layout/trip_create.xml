@@ -94,6 +94,7 @@
             </LinearLayout>
 
         </TableLayout>
+
         <Button
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
@@ -143,10 +144,11 @@
                         android:textStyle="bold"/>
                 </TableRow>
                 <TableRow
+                    android:id="@+id/trStartTime"
                     android:gravity="center"
                     android:padding="10dp">
                     <TextView
-                        android:id="@+id/setStartTime"
+                        android:id="@+id/tvStartTime"
                         android:text="06:30 Hrs"
                         android:clickable="true"
                         />
@@ -168,9 +170,11 @@
                         android:textStyle="bold"/>
                 </TableRow>
                 <TableRow
+                    android:id="@+id/trReturnTime"
                     android:gravity="center"
                     android:padding="10dp">
-                    <TextView android:text="17:30 Hrs"/>
+                    <TextView android:text="17:30 Hrs"
+                        android:id="@+id/tvReturnTime"/>
                 </TableRow>
             </TableLayout>
         </LinearLayout>

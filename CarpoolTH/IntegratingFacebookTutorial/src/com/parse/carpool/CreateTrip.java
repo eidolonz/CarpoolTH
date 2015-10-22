@@ -1,5 +1,7 @@
 package com.parse.carpool;
 
+import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -12,6 +14,7 @@ import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -24,20 +27,29 @@ import com.parse.integratingfacebooktutorial.R;
 
 import org.json.JSONObject;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Objects;
 
 /**
  * Created by JUMRUS on 20/9/2558.
  */
-public class StartTrip extends ActionBarActivity {
+public class CreateTrip extends ActionBarActivity {
 
     private boolean allowSmoking = false;
     private boolean isDaily = true;
     private int money = 10;
     private int passenger = 1;
+    private int startMinute;
+    private int startHour;
+    private int returnMinute;
+    private int returnHour;
 
     private static View view;
+    TextView tvStartTime;
+    TextView tvReturnTime;
+    TableRow trStartTime;
+    TableRow trReturnTime;
     TableRow dailyOnLayout;
     TableLayout locationLO;
     ToggleButton su;
@@ -87,6 +99,8 @@ public class StartTrip extends ActionBarActivity {
         latitudeSource = Double.parseDouble(intent.getStringExtra("SetLatitudeSource"));
         longitudeSource = Double.parseDouble(intent.getStringExtra("SetLongitudeSource"));
 
+        setCurrentTimeOnView();
+        addListenerOnTime();
         sourceTV = (TextView) findViewById(R.id.sourceTV);
         destinationTV = (TextView) findViewById(R.id.destinationTV);
         sourceTV.setText("From: "+sourceDetail);
@@ -324,6 +338,77 @@ public class StartTrip extends ActionBarActivity {
 
 
 
+    }
+
+    public void setCurrentTimeOnView(){
+        final Calendar c = Calendar.getInstance();
+        hour = c.get(Calendar.HOUR_OF_DAY);
+        minute = c.get(Calendar.MINUTE);
+    }
+    public void addListenerOnTime(){
+        trStartTime = (TableRow) findViewById(R.id.trStartTime);
+        trReturnTime = (TableRow) findViewById(R.id.trReturnTime);
+        tvStartTime = (TextView) findViewById(R.id.tvStartTime);
+        tvReturnTime = (TextView) findViewById(R.id.tvReturnTime);
+
+        trStartTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog(1);
+            }
+        });
+        trReturnTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog(2);
+            }
+        });
+
+    }
+
+    @Override
+    protected Dialog onCreateDialog(int id){
+        switch (id) {
+            case 1:
+                // set time picker as current time
+                return new TimePickerDialog(this,timePickerListener1, startHour, startMinute,false);
+            case 2:
+                return new TimePickerDialog(this,timePickerListener2, hour, minute,false);
+
+        }
+        return null;
+
+    }
+    private TimePickerDialog.OnTimeSetListener timePickerListener1 =
+            new TimePickerDialog.OnTimeSetListener() {
+                public void onTimeSet(TimePicker view, int selectedHour,
+                                      int selectedMinute) {
+                    startHour = selectedHour;
+                    startMinute = selectedMinute;
+
+                    tvStartTime.setText(startHour + ":" + startMinute + " Hrs");
+
+
+                }
+            };
+    private TimePickerDialog.OnTimeSetListener timePickerListener2 =
+            new TimePickerDialog.OnTimeSetListener() {
+                public void onTimeSet(TimePicker view, int selectedHour,
+                                      int selectedMinute) {
+                    returnHour = selectedHour;
+                    returnMinute = selectedMinute;
+
+                    tvReturnTime.setText(returnHour + ":" + returnMinute + " Hrs");
+
+
+                }
+            };
+
+    private static String pad(int c) {
+        if (c >= 10)
+            return String.valueOf(c);
+        else
+            return "0" + String.valueOf(c);
     }
 
     public void initialWeekObj(){
