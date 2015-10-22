@@ -107,14 +107,11 @@ public class TripDetail extends ActionBarActivity {
     private int position;
     private boolean isFull;
     private boolean isOwner;
-<<<<<<< HEAD
-    private boolean isRun = false;
-=======
     private double latSource = 0.00;
     private double longSource = 0.00;
     private double latDes = 0.00;
     private double longDes = 0.00;
->>>>>>> 3f4befee8171083088cf20a3cd823a614be17678
+    private boolean isRun = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -208,8 +205,8 @@ public class TripDetail extends ActionBarActivity {
         tel.setText(tripDetail.getPhoneNo());
         mail.setText(tripDetail.getEmail());
         description.setText(tripDetail.getDescription());
-        tvStartTime.setText(tripDetail.getStartHour() + ":" + tripDetail.getStartMinute() + " Hrs");
-        tvReturnTime.setText(tripDetail.getReturnHour() + ":" + tripDetail.getReturnMinute() + " Hrs");
+        tvStartTime.setText(tripDetail.getStartHour() + ":" + tripDetail.getStartMinute());
+        tvReturnTime.setText(tripDetail.getReturnHour() + ":" + tripDetail.getReturnMinute());
 
         userProfilePictureView = (ProfilePictureView) findViewById(R.id.userProfilePicture);
         //Fetch Facebook user info if it is logged
@@ -219,56 +216,8 @@ public class TripDetail extends ActionBarActivity {
     }
 
 
-<<<<<<< HEAD
-    protected  void setUpMapIfNeeded() {
 
-        if(googleMap == null && !this.isRun) {
 
-            googleMap = ((WorkaroundMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-            ((WorkaroundMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).setListener(new WorkaroundMapFragment.OnTouchListener() {
-                @Override
-                public void onTouch() {
-                    sv_container.requestDisallowInterceptTouchEvent(true);
-                }
-            });
-
-            googleMap.setMyLocationEnabled(true);
-            if (googleMap != null) {
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(13.65098, 100.491611), 13));
-                gd = new GoogleDirection(this);
-
-                gd.setLogging(true);
-
-                    gd.request(new LatLng(13.65098, 100.491611), new LatLng(13.738622, 100.530947), GoogleDirection.MODE_DRIVING);
-=======
->>>>>>> 3f4befee8171083088cf20a3cd823a614be17678
-
-                    gd.setOnDirectionResponseListener(new GoogleDirection.OnDirectionResponseListener() {
-                        public void onResponse(String status, Document doc, GoogleDirection gd) {
-                            mDoc = doc;
-                            googleMap.addPolyline(gd.getPolyline(doc, 3, Color.RED));
-                            googleMap.addMarker(new MarkerOptions().position(new LatLng(13.65098, 100.491611))
-                                    .icon(BitmapDescriptorFactory.defaultMarker(
-                                            BitmapDescriptorFactory.HUE_GREEN)));
-
-                            googleMap.addMarker(new MarkerOptions().position(new LatLng(13.738622, 100.530947))
-                                    .icon(BitmapDescriptorFactory.defaultMarker(
-                                            BitmapDescriptorFactory.HUE_GREEN)));
-                            if (!isRun) {
-                                gd.request(new LatLng(13.65098, 100.491611), new LatLng(13.738622, 100.530947), GoogleDirection.MODE_DRIVING);
-                                isRun = true;}
-                            }
-                        });
-
-<<<<<<< HEAD
-
-            }
-        }
-        googleMap.setMyLocationEnabled(true);
-    }
-
-=======
->>>>>>> 3f4befee8171083088cf20a3cd823a614be17678
 
 
 
@@ -315,7 +264,6 @@ private void getTripDetail(){
                 tripDetail.setStartMinute((int) trips.get("StartMinute"));
                 tripDetail.setReturnHour((int) trips.get("ReturnHour"));
                 tripDetail.setReturnMinute((int)trips.get("ReturnMinute"));
-
                 tripDetail.setFacebookId((Long)trips.get("FacebookId"));
                 tripDetail.setName(trips.getString("OwnerName"));
                 tripDetail.setSource(trips.getString("Source"));
@@ -650,7 +598,7 @@ private void getTripDetail(){
         if(googleMap == null) {
 
             googleMap = ((WorkaroundMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-            ((WorkaroundMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).setListener(new WorkaroundMapFragment.OnTouchListener(){
+            ((WorkaroundMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).setListener(new WorkaroundMapFragment.OnTouchListener() {
                 @Override
                 public void onTouch() {
                     sv_container.requestDisallowInterceptTouchEvent(true);
@@ -675,8 +623,10 @@ private void getTripDetail(){
                         googleMap.addMarker(new MarkerOptions().position(new LatLng(latDes, longDes))
                                 .icon(BitmapDescriptorFactory.defaultMarker(
                                         BitmapDescriptorFactory.HUE_GREEN)));
-                        gd.request(new LatLng(latSource, longSource), new LatLng(latDes, longDes), GoogleDirection.MODE_DRIVING);
-
+                        if(!isRun) {
+                            gd.request(new LatLng(latSource, longSource), new LatLng(latDes, longDes), GoogleDirection.MODE_DRIVING);
+                            isRun = true;
+                        }
 
                     }
                 });
