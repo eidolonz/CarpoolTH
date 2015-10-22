@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 /**
- * Created by JUMRUS on 20/9/2558.
+ * Created by JUMRUSs on 20/9/2558.
  */
 public class CreateTrip extends ActionBarActivity {
 
@@ -342,8 +342,10 @@ public class CreateTrip extends ActionBarActivity {
 
     public void setCurrentTimeOnView(){
         final Calendar c = Calendar.getInstance();
-        hour = c.get(Calendar.HOUR_OF_DAY);
-        minute = c.get(Calendar.MINUTE);
+        startHour = c.get(Calendar.HOUR_OF_DAY);
+        startMinute = c.get(Calendar.MINUTE);
+        returnHour = c.get(Calendar.HOUR_OF_DAY);
+        returnMinute = c.get(Calendar.MINUTE);
     }
     public void addListenerOnTime(){
         trStartTime = (TableRow) findViewById(R.id.trStartTime);
@@ -373,7 +375,7 @@ public class CreateTrip extends ActionBarActivity {
                 // set time picker as current time
                 return new TimePickerDialog(this,timePickerListener1, startHour, startMinute,false);
             case 2:
-                return new TimePickerDialog(this,timePickerListener2, hour, minute,false);
+                return new TimePickerDialog(this,timePickerListener2, returnHour, returnMinute,false);
 
         }
         return null;
@@ -433,7 +435,10 @@ public class CreateTrip extends ActionBarActivity {
                 if (isDaily) {
                     dataObject.put("daily", week);
                 } else {
-                    dataObject.put("date", date);
+                    dataObject.put("StartHour", startHour);
+                    dataObject.put("StartMinute", startMinute);
+                    dataObject.put("ReturnHour", returnHour);
+                    dataObject.put("ReturnMinute", returnMinute);
                 }
             }
             catch (Exception e){}
