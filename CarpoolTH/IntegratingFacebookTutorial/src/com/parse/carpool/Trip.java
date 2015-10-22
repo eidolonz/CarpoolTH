@@ -20,6 +20,10 @@ public class Trip{
     private long facebookId;
     private int money;
     private int passenger;
+    private int startHour;
+    private int startMinute;
+    private int returnHour;
+    private int returnMinute;
     private ParseObject createBy;
     private Object week;
     private Object day;
@@ -150,5 +154,37 @@ public class Trip{
 
     public void setFacebookId(long facebookId) {
         this.facebookId = facebookId;
+    }
+
+    public int getStartHour() {
+        return startHour;
+    }
+
+    public void setStartHour(int startHour) {
+        this.startHour = startHour;
+    }
+
+    public int getStartMinute() {
+        return startMinute;
+    }
+
+    public void setStartMinute(int startMinute) {
+        this.startMinute = startMinute;
+    }
+
+    public int getReturnHour() {
+        return returnHour;
+    }
+
+    public void setReturnHour(int returnHour) {
+        this.returnHour = returnHour;
+    }
+
+    public int getReturnMinute() {
+        return returnMinute;
+    }
+
+    public void setReturnMinute(int returnMinute) {
+        this.returnMinute = returnMinute;
     }
 }

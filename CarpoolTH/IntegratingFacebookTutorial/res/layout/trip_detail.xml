@@ -227,7 +227,8 @@
                 <TableRow
                     android:gravity="center"
                     android:padding="10dp">
-                    <TextView android:text="06:30 Hrs"/>
+                    <TextView android:text="06:30 Hrs"
+                        android:id="@+id/tvStartTime"/>
                 </TableRow>
             </TableLayout>
 
@@ -247,7 +248,8 @@
                 <TableRow
                     android:gravity="center"
                     android:padding="10dp">
-                    <TextView android:text="17:30 Hrs"/>
+                    <TextView android:text="17:30 Hrs"
+                        android:id="@+id/tvReturnTime"/>
                 </TableRow>
             </TableLayout>
         </LinearLayout>
