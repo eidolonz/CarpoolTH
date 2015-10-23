@@ -77,19 +77,27 @@
                 android:padding="5dp"
                 android:id="@+id/dailyOff"
                 android:background="#fff"
-                >
+                android:gravity="center_vertical">                >
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="I will travel on:       "
+                    android:text="I will travel on:"
                     android:textSize="15sp"
                     android:textStyle="bold"/>
                 <TextView
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:text="September, 20 2015"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:id="@+id/tvTravelDate"/>
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="20 sep 2015"
-                    android:textSize="15sp"
-                    android:textStyle="bold"/>
+                    android:src="@drawable/icon_datepicker"
+                    android:layout_gravity="right"
+                    android:id="@+id/imgDatePicker"/>
 
             </LinearLayout>
 
@@ -149,7 +157,7 @@
                     android:padding="10dp">
                     <TextView
                         android:id="@+id/tvStartTime"
-                        android:text="06:30 Hrs"
+                        android:text="06:30 AM"
                         android:clickable="true"
                         />
 
@@ -173,7 +181,7 @@
                     android:id="@+id/trReturnTime"
                     android:gravity="center"
                     android:padding="10dp">
-                    <TextView android:text="17:30 Hrs"
+                    <TextView android:text="05:30 PM"
                         android:id="@+id/tvReturnTime"/>
                 </TableRow>
             </TableLayout>

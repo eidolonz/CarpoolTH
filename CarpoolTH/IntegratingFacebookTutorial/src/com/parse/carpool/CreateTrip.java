@@ -1,5 +1,6 @@
 package com.parse.carpool;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -8,7 +9,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TableLayout;
@@ -70,6 +73,8 @@ public class CreateTrip extends ActionBarActivity {
     TextView coTV;
     TextView sourceTV;
     TextView destinationTV;
+    TextView tvTravelDate;
+    ImageView imgDatePicker;
     Switch dailySwitch;
     Switch cigaSwitch;
     Button addMoneyBtn;
@@ -86,6 +91,8 @@ public class CreateTrip extends ActionBarActivity {
     private Double longitudeDestination;
     private Double latitudeSource;
     private Double longitudeSource;
+    private DatePickerDialog datePickerDialog;
+    private int year, month, day;
     @Override
     protected void onCreate(Bundle saveInstanceState){
         super.onCreate(saveInstanceState);
@@ -101,6 +108,9 @@ public class CreateTrip extends ActionBarActivity {
 
         setCurrentTimeOnView();
         addListenerOnTime();
+        setCurrentDateOnView();
+        addListenerOnDate();
+
         sourceTV = (TextView) findViewById(R.id.sourceTV);
         destinationTV = (TextView) findViewById(R.id.destinationTV);
         sourceTV.setText("From: "+sourceDetail);
@@ -117,6 +127,231 @@ public class CreateTrip extends ActionBarActivity {
         });
 
         initialWeekObj();
+
+        carType = (EditText) findViewById(R.id.carType);
+        tel = (EditText) findViewById(R.id.tel);
+        email = (EditText) findViewById(R.id.email);
+        description = (EditText) findViewById(R.id.description);
+
+        cigaSwitch = (Switch) findViewById(R.id.ciga);
+        cigaSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    allowSmoking = true;
+                } else {
+                    allowSmoking = false;
+                }
+            }
+        });
+
+        moneyTV = (TextView) findViewById(R.id.money_TV);
+        addMoneyBtn = (Button) findViewById(R.id.addMoneyBtn);
+        subMoneyBtn = (Button) findViewById(R.id.subMoneyBtn);
+        setLocation = (Button) findViewById(R.id.setLocationBtn);
+
+        setLocation.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public  void onClick(View v){
+                Intent intent = new Intent(getApplicationContext(), MapActivity.class);
+                startActivity(intent);
+            }
+        });
+        addMoneyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(money>=0){
+                    money += 10;
+                }else{
+                    money = 0;
+                }
+                moneyTV.setText(money+" บาท/คน");
+            }
+        });
+        subMoneyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(money > 0){
+                    money -= 10;
+                }else{
+                    money=0;
+                }
+                moneyTV.setText(money + " บาท/คน");
+            }
+        });
+
+        coTV = (TextView) findViewById(R.id.co_TV);
+        addPassBtn = (Button) findViewById(R.id.addPassBtn);
+        subPassBtn = (Button) findViewById(R.id.subPassBtn);
+        addPassBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (passenger >= 0){
+                    passenger++;
+                }else{
+                    passenger = 1;
+                }
+                coTV.setText("" + passenger);
+            }
+        });
+        subPassBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(passenger > 1){
+                    passenger--;
+                }else {
+                    passenger = 1;
+                }
+                coTV.setText("" + passenger);
+            }
+        });
+
+        createTrip = (Button) findViewById(R.id.create_trip);
+        createTrip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveTrip();
+            }
+        });
+
+
+
+
+
+
+    }
+
+    public void setCurrentDateOnView(){
+        tvTravelDate = (TextView) findViewById(R.id.tvTravelDate);
+        final Calendar c = Calendar.getInstance();
+        year = c.get(Calendar.YEAR);
+        month = c.get(Calendar.MONTH);
+        day = c.get(Calendar.DAY_OF_MONTH);
+        setDate(month,day,year,tvTravelDate);
+    }
+
+    public void addListenerOnDate(){
+        imgDatePicker = (ImageView) findViewById(R.id.imgDatePicker);
+
+        imgDatePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog(3);
+            }
+        });
+
+    }
+
+    public void setCurrentTimeOnView(){
+        final Calendar c = Calendar.getInstance();
+        startHour = c.get(Calendar.HOUR_OF_DAY);
+        startMinute = c.get(Calendar.MINUTE);
+        returnHour = c.get(Calendar.HOUR_OF_DAY);
+        returnMinute = c.get(Calendar.MINUTE);
+    }
+    public void addListenerOnTime(){
+        trStartTime = (TableRow) findViewById(R.id.trStartTime);
+        trReturnTime = (TableRow) findViewById(R.id.trReturnTime);
+        tvStartTime = (TextView) findViewById(R.id.tvStartTime);
+        tvReturnTime = (TextView) findViewById(R.id.tvReturnTime);
+
+        trStartTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog(1);
+            }
+        });
+        trReturnTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog(2);
+            }
+        });
+
+    }
+
+    @Override
+    protected Dialog onCreateDialog(int id){
+        switch (id) {
+            case 1:
+                // set time picker as current time
+                return new TimePickerDialog(this,timePickerListener1, startHour, startMinute,false);
+            case 2:
+                return new TimePickerDialog(this,timePickerListener2, returnHour, returnMinute,false);
+            case 3:
+                return new DatePickerDialog(this,datePickerListener, year, month, day);
+
+        }
+        return null;
+
+    }
+    private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+        public void onDateSet(DatePicker view, int selectedYear,
+                              int selectedMonth, int selectedDay) {
+            String month = "";
+            switch (selectedMonth){
+                case 0: month = "January"; break;
+                case 1: month = "February"; break;
+                case 2: month = "March"; break;
+                case 3: month = "April"; break;
+                case 4: month = "May"; break;
+                case 5: month = "June"; break;
+                case 6: month = "July"; break;
+                case 7: month = "August"; break;
+                case 8: month = "September"; break;
+                case 9: month = "October"; break;
+                case 10: month = "November"; break;
+                case 11: month = "December"; break;
+                default:
+                    month = "January";
+                    break;
+            }
+            setDate(selectedMonth,selectedDay,selectedYear,tvTravelDate);
+        }
+    };
+    private TimePickerDialog.OnTimeSetListener timePickerListener1 =
+            new TimePickerDialog.OnTimeSetListener() {
+                public void onTimeSet(TimePicker view, int selectedHour,
+                                      int selectedMinute) {
+                    startHour = selectedHour;
+                    startMinute = selectedMinute;
+                    setTime(startHour, startMinute, tvStartTime);
+
+
+                }
+            };
+    private TimePickerDialog.OnTimeSetListener timePickerListener2 =
+            new TimePickerDialog.OnTimeSetListener() {
+                public void onTimeSet(TimePicker view, int selectedHour,
+                                      int selectedMinute) {
+                    returnHour = selectedHour;
+                    returnMinute = selectedMinute;
+                    setTime(returnHour, returnMinute, tvReturnTime);
+                    //tvReturnTime.setText(returnHour + ":" + returnMinute + " Hrs");
+
+
+                }
+            };
+
+    private static String pad(int c) {
+        if (c >= 10)
+            return String.valueOf(c);
+        else
+            return "0" + String.valueOf(c);
+    }
+
+    public void initialWeekObj(){
+        try {
+            this.week.put("sun", false);
+            this.week.put("mon", true);
+            this.week.put("tue", true);
+            this.week.put("wed", true);
+            this.week.put("thu", true);
+            this.week.put("fri", true);
+            this.week.put("sat", false);
+        }
+        catch (Exception e){}
 
         dailyOnLayout = (TableRow) findViewById(R.id.dailyOn);
         dailyOffLayout = (LinearLayout) findViewById(R.id.dailyOff);
@@ -245,185 +480,6 @@ public class CreateTrip extends ActionBarActivity {
                 }
             }
         });
-
-        carType = (EditText) findViewById(R.id.carType);
-        tel = (EditText) findViewById(R.id.tel);
-        email = (EditText) findViewById(R.id.email);
-        description = (EditText) findViewById(R.id.description);
-
-        cigaSwitch = (Switch) findViewById(R.id.ciga);
-        cigaSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-                    allowSmoking = true;
-                } else {
-                    allowSmoking = false;
-                }
-            }
-        });
-
-        moneyTV = (TextView) findViewById(R.id.money_TV);
-        addMoneyBtn = (Button) findViewById(R.id.addMoneyBtn);
-        subMoneyBtn = (Button) findViewById(R.id.subMoneyBtn);
-        setLocation = (Button) findViewById(R.id.setLocationBtn);
-
-        setLocation.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public  void onClick(View v){
-                Intent intent = new Intent(getApplicationContext(), MapActivity.class);
-                startActivity(intent);
-            }
-        });
-        addMoneyBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(money>=0){
-                    money += 10;
-                }else{
-                    money = 0;
-                }
-                moneyTV.setText(money+" บาท/คน");
-            }
-        });
-        subMoneyBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(money > 0){
-                    money -= 10;
-                }else{
-                    money=0;
-                }
-                moneyTV.setText(money + " บาท/คน");
-            }
-        });
-
-        coTV = (TextView) findViewById(R.id.co_TV);
-        addPassBtn = (Button) findViewById(R.id.addPassBtn);
-        subPassBtn = (Button) findViewById(R.id.subPassBtn);
-        addPassBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (passenger >= 0){
-                    passenger++;
-                }else{
-                    passenger = 1;
-                }
-                coTV.setText("" + passenger);
-            }
-        });
-        subPassBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(passenger > 1){
-                    passenger--;
-                }else {
-                    passenger = 1;
-                }
-                coTV.setText("" + passenger);
-            }
-        });
-
-        createTrip = (Button) findViewById(R.id.create_trip);
-        createTrip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveTrip();
-            }
-        });
-
-
-
-
-
-
-    }
-
-    public void setCurrentTimeOnView(){
-        final Calendar c = Calendar.getInstance();
-        startHour = c.get(Calendar.HOUR_OF_DAY);
-        startMinute = c.get(Calendar.MINUTE);
-        returnHour = c.get(Calendar.HOUR_OF_DAY);
-        returnMinute = c.get(Calendar.MINUTE);
-    }
-    public void addListenerOnTime(){
-        trStartTime = (TableRow) findViewById(R.id.trStartTime);
-        trReturnTime = (TableRow) findViewById(R.id.trReturnTime);
-        tvStartTime = (TextView) findViewById(R.id.tvStartTime);
-        tvReturnTime = (TextView) findViewById(R.id.tvReturnTime);
-
-        trStartTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialog(1);
-            }
-        });
-        trReturnTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialog(2);
-            }
-        });
-
-    }
-
-    @Override
-    protected Dialog onCreateDialog(int id){
-        switch (id) {
-            case 1:
-                // set time picker as current time
-                return new TimePickerDialog(this,timePickerListener1, startHour, startMinute,false);
-            case 2:
-                return new TimePickerDialog(this,timePickerListener2, returnHour, returnMinute,false);
-
-        }
-        return null;
-
-    }
-    private TimePickerDialog.OnTimeSetListener timePickerListener1 =
-            new TimePickerDialog.OnTimeSetListener() {
-                public void onTimeSet(TimePicker view, int selectedHour,
-                                      int selectedMinute) {
-                    startHour = selectedHour;
-                    startMinute = selectedMinute;
-
-                    tvStartTime.setText(startHour + ":" + startMinute + " Hrs");
-
-
-                }
-            };
-    private TimePickerDialog.OnTimeSetListener timePickerListener2 =
-            new TimePickerDialog.OnTimeSetListener() {
-                public void onTimeSet(TimePicker view, int selectedHour,
-                                      int selectedMinute) {
-                    returnHour = selectedHour;
-                    returnMinute = selectedMinute;
-
-                    tvReturnTime.setText(returnHour + ":" + returnMinute + " Hrs");
-
-
-                }
-            };
-
-    private static String pad(int c) {
-        if (c >= 10)
-            return String.valueOf(c);
-        else
-            return "0" + String.valueOf(c);
-    }
-
-    public void initialWeekObj(){
-        try {
-            this.week.put("sun", false);
-            this.week.put("mon", true);
-            this.week.put("tue", true);
-            this.week.put("wed", true);
-            this.week.put("thu", true);
-            this.week.put("fri", true);
-            this.week.put("sat", false);
-        }
-        catch (Exception e){}
     }
 
 
@@ -480,5 +536,45 @@ public class CreateTrip extends ActionBarActivity {
         Intent intent = new Intent(getApplication(), MainActivity.class);
         Toast.makeText(getApplication(),"Trip created", Toast.LENGTH_LONG).show();
         startActivity(intent);
+    }
+
+    public void setTime(int inpHr, int inpMin, TextView tv){
+        String hr = "" + inpHr;
+        String min = "" + inpMin;
+        if(inpHr < 10){
+            hr = "0" + hr;
+        }
+        if (inpMin < 10){
+            min = "0" + min;
+        }
+
+        if(inpHr > 11){
+            if(inpHr-12 < 10) {
+                hr = "0" + (inpHr - 12);
+            }
+            tv.setText(hr + ":" + min + " PM");
+        }else{
+            tv.setText(hr + ":" + min + " AM");
+        }
+    }
+
+    public void setDate(int selectedMonth, int selectedDay, int selectedYear, TextView tv){
+        String month = "";
+        switch (selectedMonth){
+            case 0: month = "January"; break;
+            case 1: month = "February"; break;
+            case 2: month = "March"; break;
+            case 3: month = "April"; break;
+            case 4: month = "May"; break;
+            case 5: month = "June"; break;
+            case 6: month = "July"; break;
+            case 7: month = "August"; break;
+            case 8: month = "September"; break;
+            case 9: month = "October"; break;
+            case 10: month = "November"; break;
+            case 11: month = "December"; break;
+            default: month = "January"; break;
+        }
+        tv.setText(month + " " + selectedDay + ", " + selectedYear);
     }
 }

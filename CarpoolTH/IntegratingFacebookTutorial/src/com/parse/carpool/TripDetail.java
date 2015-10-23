@@ -1,6 +1,7 @@
 package com.parse.carpool;
 
 
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -33,6 +34,7 @@ import com.parse.integratingfacebooktutorial.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,6 +88,8 @@ public class TripDetail extends ActionBarActivity {
     TextView passengerName6;
     TextView tvStartTime;
     TextView tvReturnTime;
+    TextView tvTravelDate;
+    ImageView imgDatePicker;
     Button joinBtn;
     Button cancelBtn;
     Button deleteBtn;
@@ -194,6 +198,15 @@ public class TripDetail extends ActionBarActivity {
         description = (TextView) findViewById(R.id.description);
         tvStartTime = (TextView) findViewById(R.id.tvStartTime);
         tvReturnTime = (TextView) findViewById(R.id.tvReturnTime);
+        tvTravelDate = (TextView) findViewById(R.id.tvTravelDate);
+
+        imgDatePicker = (ImageView) findViewById(R.id.imgDatePicker);
+        imgDatePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
 
         name.setText(tripDetail.getName());
@@ -205,8 +218,16 @@ public class TripDetail extends ActionBarActivity {
         tel.setText(tripDetail.getPhoneNo());
         mail.setText(tripDetail.getEmail());
         description.setText(tripDetail.getDescription());
-        tvStartTime.setText(tripDetail.getStartHour() + ":" + tripDetail.getStartMinute());
-        tvReturnTime.setText(tripDetail.getReturnHour() + ":" + tripDetail.getReturnMinute());
+        if(tripDetail.getStartHour() > 11){
+            tvStartTime.setText((tripDetail.getStartHour()-12) + ":" + tripDetail.getStartMinute() + " PM");
+        }else{
+            tvStartTime.setText((tripDetail.getStartHour()) + ":" + tripDetail.getStartMinute() + " AM");
+        }
+        if (tripDetail.getReturnHour() > 11){
+            tvReturnTime.setText((tripDetail.getReturnHour()-12) + ":" + tripDetail.getReturnMinute() + " PM");
+        }else{
+            tvReturnTime.setText((tripDetail.getReturnHour()) + ":" + tripDetail.getReturnMinute() + " AM");
+        }
 
         userProfilePictureView = (ProfilePictureView) findViewById(R.id.userProfilePicture);
         //Fetch Facebook user info if it is logged
