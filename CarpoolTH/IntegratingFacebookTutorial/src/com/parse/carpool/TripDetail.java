@@ -65,11 +65,13 @@ public class TripDetail extends ActionBarActivity {
     ImageView thu;
     ImageView fri;
     ImageView sat;
+    TextView selectedDate;
     TextView name;
     TextView sourceTV;
     TextView destinationTV;
     TextView money;
     TextView passenger;
+    TextView ciga;
     TextView car;
     TextView tel;
     TextView mail;
@@ -99,7 +101,6 @@ public class TripDetail extends ActionBarActivity {
     GoogleMap googleMap;
 
     private String tripId;
-    private boolean isDaily = true;
     private ProfilePictureView userProfilePictureView;
     private ProfilePictureView co_tripperImg01;
     private ProfilePictureView co_tripperImg02;
@@ -191,6 +192,7 @@ public class TripDetail extends ActionBarActivity {
         name = (TextView) findViewById(R.id.name);
         sourceTV = (TextView) findViewById(R.id.source);
         destinationTV = (TextView) findViewById(R.id.destination);
+        ciga = (TextView) findViewById(R.id.ciga);
         money = (TextView) findViewById(R.id.money_TV);
         car = (TextView) findViewById(R.id.carType);
         tel = (TextView) findViewById(R.id.tel);
@@ -200,18 +202,15 @@ public class TripDetail extends ActionBarActivity {
         tvReturnTime = (TextView) findViewById(R.id.tvReturnTime);
         tvTravelDate = (TextView) findViewById(R.id.tvTravelDate);
 
-        imgDatePicker = (ImageView) findViewById(R.id.imgDatePicker);
-        imgDatePicker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
 
         name.setText(tripDetail.getName());
         sourceTV.setText(tripDetail.getSource());
         destinationTV.setText(tripDetail.getDestination());
+        if(tripDetail.isSmoke()) {
+            ciga.setText("Not Allowed");
+        }else{
+            ciga.setText("Doesn't Matter");
+        }
         String moneyText = tripDetail.getMoney() + " บาท/คน";
         money.setText(moneyText);
         car.setText(tripDetail.getCar());
@@ -264,12 +263,11 @@ private void getTripDetail(){
                 }
 
                 if(trips.get("daily") != null){
-                    this.isDaily = true;
                     tripDetail.setWeek(trips.get("daily"));
-                    setDaily();
+                    setDaily(true);
                 }else{
-                    this.isDaily = false;
-                    tripDetail.setDay(trips.get("day"));
+                    tripDetail.setSelectedDate(trips.getString("selectedDate"));
+                    setDaily(false);
 
                 }
 
@@ -284,11 +282,12 @@ private void getTripDetail(){
                 tripDetail.setStartHour((int)trips.get("StartHour"));
                 tripDetail.setStartMinute((int) trips.get("StartMinute"));
                 tripDetail.setReturnHour((int) trips.get("ReturnHour"));
-                tripDetail.setReturnMinute((int)trips.get("ReturnMinute"));
-                tripDetail.setFacebookId((Long)trips.get("FacebookId"));
+                tripDetail.setReturnMinute((int) trips.get("ReturnMinute"));
+                tripDetail.setFacebookId((Long) trips.get("FacebookId"));
                 tripDetail.setName(trips.getString("OwnerName"));
                 tripDetail.setSource(trips.getString("Source"));
                 tripDetail.setDestination(trips.getString("Destination"));
+                tripDetail.setIsSmoke(trips.getBoolean("Smoke"));
                 tripDetail.setMoney((int) trips.get("Money"));
                 tripDetail.setPassenger((int) trips.get("Passenger"));
                 tripDetail.setCar(trips.getString("Car"));
@@ -400,7 +399,7 @@ private void getTripDetail(){
             this.position = position;
         }
     }
-    public void setDaily(){
+    public void setDaily(boolean isDaily){
         travelDaily = (LinearLayout) findViewById(R.id.travel_daily);
         travelOn = (LinearLayout) findViewById(R.id.travel_on);
 
@@ -449,6 +448,9 @@ private void getTripDetail(){
             travelDaily.setVisibility(LinearLayout.VISIBLE);
             travelOn.setVisibility(LinearLayout.GONE);
         }else{
+            selectedDate = (TextView) findViewById(R.id.selectedDate);
+            selectedDate.setText(tripDetail.getSelectedDate());
+
             travelDaily.setVisibility(LinearLayout.GONE);
             travelOn.setVisibility(LinearLayout.VISIBLE);
         }

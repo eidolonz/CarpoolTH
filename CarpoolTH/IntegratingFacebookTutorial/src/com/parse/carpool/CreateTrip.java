@@ -93,6 +93,7 @@ public class CreateTrip extends ActionBarActivity {
     private Double longitudeSource;
     private DatePickerDialog datePickerDialog;
     private int year, month, day;
+    private String selectedDate;
     @Override
     protected void onCreate(Bundle saveInstanceState){
         super.onCreate(saveInstanceState);
@@ -491,13 +492,14 @@ public class CreateTrip extends ActionBarActivity {
                 if (isDaily) {
                     dataObject.put("daily", week);
                 } else {
-                    dataObject.put("StartHour", startHour);
-                    dataObject.put("StartMinute", startMinute);
-                    dataObject.put("ReturnHour", returnHour);
-                    dataObject.put("ReturnMinute", returnMinute);
+                    dataObject.put("selectedDate", selectedDate);
                 }
             }
             catch (Exception e){}
+            dataObject.put("StartHour", startHour);
+            dataObject.put("StartMinute", startMinute);
+            dataObject.put("ReturnHour", returnHour);
+            dataObject.put("ReturnMinute", returnMinute);
             dataObject.put("Smoke", allowSmoking);
             dataObject.put("Money", money);
             dataObject.put("Passenger", passenger);
@@ -575,6 +577,7 @@ public class CreateTrip extends ActionBarActivity {
             case 11: month = "December"; break;
             default: month = "January"; break;
         }
-        tv.setText(month + " " + selectedDay + ", " + selectedYear);
+        this.selectedDate = month + " " + selectedDay + ", " + selectedYear;
+        tv.setText(this.selectedDate);
     }
 }

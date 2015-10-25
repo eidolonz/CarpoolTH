@@ -17,6 +17,7 @@ public class Trip{
     private String description;
     private String objectId;
     private String ownerName;
+    private boolean isSmoke;
     private long facebookId;
     private int money;
     private int passenger;
@@ -24,6 +25,7 @@ public class Trip{
     private int startMinute;
     private int returnHour;
     private int returnMinute;
+    private String selectedDate;
     private ParseObject createBy;
     private Object week;
     private Object day;
@@ -186,5 +188,21 @@ public class Trip{
 
     public void setReturnMinute(int returnMinute) {
         this.returnMinute = returnMinute;
+    }
+
+    public String getSelectedDate() {
+        return selectedDate;
+    }
+
+    public void setSelectedDate(String selectedDate) {
+        this.selectedDate = selectedDate;
+    }
+
+    public boolean isSmoke() {
+        return isSmoke;
+    }
+
+    public void setIsSmoke(boolean isSmoke) {
+        this.isSmoke = isSmoke;
     }
 }

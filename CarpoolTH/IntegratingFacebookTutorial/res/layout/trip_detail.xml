@@ -203,7 +203,8 @@
                 android:layout_marginTop="5dp">
                 <TextView
                     android:text="September 22, 2015"
-                    android:gravity="center_horizontal"/>
+                    android:gravity="center_horizontal"
+                    android:id="@+id/selectedDate"/>
             </TableLayout>
         </LinearLayout>
 
