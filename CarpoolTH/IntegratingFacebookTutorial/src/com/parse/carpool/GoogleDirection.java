@@ -92,8 +92,8 @@ public class GoogleDirection {
 
     public String request(LatLng start, LatLng end, String mode) {
         final String url = "http://maps.googleapis.com/maps/api/directions/xml?"
-                + "origin=" + 13.65098 + "," + 100.491611
-                + "&destination=" + 13.738622 + "," + 100.530947
+                + "origin=" + start.latitude + "," + start.longitude
+                + "&destination=" + end.latitude + "," + end.longitude
                 + "&sensor=false&units=metric&mode=" + mode;
 
         if(isLogging)

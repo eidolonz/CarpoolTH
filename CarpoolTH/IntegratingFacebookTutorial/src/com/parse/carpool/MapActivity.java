@@ -4,6 +4,7 @@ package com.parse.carpool;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.integratingfacebooktutorial.R;
 
 import org.json.JSONObject;
+import org.w3c.dom.Document;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -52,7 +54,7 @@ public class MapActivity extends ActionBarActivity {
     ParserTask placesParserTask;
     ParserTask placeDetailsParserTask;
     GoogleMap googleMap;
-
+    GoogleDirection gd;
     boolean atvPlacesChecking = false;
     boolean atvPlacesChecking2 = false;
     final int PLACES=0;
@@ -73,6 +75,8 @@ public class MapActivity extends ActionBarActivity {
     protected  String getCurrentLocationName;
     protected  String getDestinationLocationName;
     private String sourceDetail;
+    private boolean isRun = false;
+    Document mDoc;
     private String destinationDetail;
     public MapActivity() {
     }
@@ -81,7 +85,7 @@ public class MapActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-
+        gd = new GoogleDirection(this);
         //saveLocation Button
         saveBtn = (Button) findViewById(R.id.saveLocation);
         saveBtn.setOnClickListener(new View.OnClickListener() {
@@ -569,6 +573,7 @@ public class MapActivity extends ActionBarActivity {
 
 
 
+                    gd.setLogging(true);
                     if( atvPlacesChecking == true) {
 
                         // Getting latitude from the parsed data
@@ -642,16 +647,43 @@ public class MapActivity extends ActionBarActivity {
                         // Adding the marker in the Google Map
                         Marker marker = googleMap.addMarker(options);
                         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitudeDestination, longitudeDestination), 13));
+
+
                         markerList2.add(marker);
                         markerList2.contains(marker);
                     }
 
-
+                    if(  source.size() > 0 && destination.size() > 0){
+                        runDirection();
+                    }
 
             }
+
+
         }
 
+    public void runDirection(){
+        gd.request(new LatLng(source.get(0), source.get(1)), new LatLng(destination.get(0), destination.get(1)), GoogleDirection.MODE_DRIVING);
+        gd.setOnDirectionResponseListener(new GoogleDirection.OnDirectionResponseListener() {
+            public void onResponse(String status, Document doc, GoogleDirection gd) {
+                mDoc = doc;
+                googleMap.addPolyline(gd.getPolyline(doc, 3, Color.RED));
 
+                googleMap.addMarker(new MarkerOptions().position(new LatLng(source.get(0), source.get(1)))
+                        .icon(BitmapDescriptorFactory.defaultMarker(
+                                BitmapDescriptorFactory.HUE_GREEN)));
+
+                googleMap.addMarker(new MarkerOptions().position(new LatLng(destination.get(0), destination.get(1)))
+                        .icon(BitmapDescriptorFactory.defaultMarker(
+                                BitmapDescriptorFactory.HUE_GREEN)));
+                if (!isRun) {
+                    gd.request(new LatLng(source.get(0), source.get(1)), new LatLng(destination.get(0), destination.get(1)), GoogleDirection.MODE_DRIVING);
+                    isRun = true;
+                }
+
+            }
+        });
+    }
 
     }
     @Override

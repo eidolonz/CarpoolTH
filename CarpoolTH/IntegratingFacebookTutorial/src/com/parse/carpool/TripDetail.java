@@ -1,7 +1,6 @@
 package com.parse.carpool;
 
 
-import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -34,7 +33,6 @@ import com.parse.integratingfacebooktutorial.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -259,7 +257,7 @@ private void getTripDetail(){
                     this.latSource = Double.parseDouble(trips.get("LatitudeSource").toString());
                     this.longSource = Double.parseDouble(trips.get("LongitudeSource").toString());
                     this.latDes = Double.parseDouble(trips.get("LatitudeDestination").toString());
-                    this.longDes = Double.parseDouble(trips.get("LatitudeDestination").toString());
+                    this.longDes = Double.parseDouble(trips.get("LongitudeDestination").toString());
                 }
 
                 if(trips.get("daily") != null){
