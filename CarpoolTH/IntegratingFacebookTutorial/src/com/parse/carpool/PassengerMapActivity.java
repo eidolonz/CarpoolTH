@@ -84,6 +84,7 @@ public class PassengerMapActivity extends ActionBarActivity {
 
         //saveLocation Button
         saveBtn = (Button) findViewById(R.id.saveLocation);
+        saveBtn.setText("Serch");
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

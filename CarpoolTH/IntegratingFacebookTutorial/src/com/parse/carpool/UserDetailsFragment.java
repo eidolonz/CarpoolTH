@@ -30,7 +30,7 @@ import org.json.JSONObject;
 
 import java.net.URL;
 
-public class UserDetailsActivity extends Fragment {
+public class UserDetailsFragment extends Fragment {
 
   private static View view;
 
@@ -58,6 +58,7 @@ public class UserDetailsActivity extends Fragment {
     userGenderView = (TextView)  view.findViewById(R.id.userGender);
     userEmailView = (TextView)  view.findViewById(R.id.userEmail);
     userAgeView = (TextView)  view.findViewById(R.id.userAge);
+
     userLogout  = (Button) view.findViewById(R.id.logoutBtn);
     userLogout.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -93,7 +94,8 @@ public class UserDetailsActivity extends Fragment {
   }
 
   private void makeMeRequest() {
-    GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(),
+    GraphRequest request = GraphRequest.newMeRequest(
+            AccessToken.getCurrentAccessToken(),
             new GraphRequest.GraphJSONObjectCallback() {
               @Override
               public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {

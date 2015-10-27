@@ -30,14 +30,18 @@ import com.parse.integratingfacebooktutorial.R;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 /**
  * Created by JUMRUSs on 20/9/2558.
  */
 public class CreateTrip extends ActionBarActivity {
+    private User userDetail = new User();
+    private List<User> userList = new ArrayList<User>();
 
     private boolean allowSmoking = false;
     private boolean isDaily = true;
@@ -107,6 +111,7 @@ public class CreateTrip extends ActionBarActivity {
         latitudeSource = Double.parseDouble(intent.getStringExtra("SetLatitudeSource"));
         longitudeSource = Double.parseDouble(intent.getStringExtra("SetLongitudeSource"));
 
+        getUserDetail();
         setCurrentTimeOnView();
         addListenerOnTime();
         setCurrentDateOnView();
@@ -133,6 +138,11 @@ public class CreateTrip extends ActionBarActivity {
         tel = (EditText) findViewById(R.id.tel);
         email = (EditText) findViewById(R.id.email);
         description = (EditText) findViewById(R.id.description);
+
+        tel.setText(userDetail.getMobileNo());
+        tel.setEnabled(false);
+        email.setText(userDetail.getEmail());
+        email.setEnabled(false);
 
         cigaSwitch = (Switch) findViewById(R.id.ciga);
         cigaSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -271,6 +281,16 @@ public class CreateTrip extends ActionBarActivity {
         });
 
     }
+
+    private void getUserDetail(){
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser != null){
+            userDetail.setMobileNo(currentUser.getString("mobileNo"));
+            userDetail.setEmail(currentUser.getString("email"));
+        }
+
+    }
+
 
     @Override
     protected Dialog onCreateDialog(int id){
@@ -526,8 +546,8 @@ public class CreateTrip extends ActionBarActivity {
             @Override
             public void done(ParseObject parseObject, ParseException e) {
                 if (e == null) {
-                    parseObject.put("YourTrip", dataObject.getObjectId());
-                    parseObject.saveInBackground();
+                    //parseObject.put("YourTrip", dataObject.getObjectId());
+                    //parseObject.saveInBackground();
                 }
             }
         });

@@ -139,7 +139,7 @@ public class MyPagerAdapter extends FragmentPagerAdapter implements IconTabProvi
 		switch (position) {
 			case 0: return  new Home();
 			case 1: return new MatchMe();
-			case 2: return new UserDetailsActivity();
+			case 2: return new UserDetailsFragment();
 			default: return new Home();
 		}
 	}

@@ -17,11 +17,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.integratingfacebooktutorial.R;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +40,7 @@ public class Home extends Fragment {
     List<ParseObject> ob;
     ListView listView ;
     List<Trip> trip;
+    String creatorName;
 
     private Button showActBtn;
     private boolean isActShow;
@@ -67,7 +71,7 @@ public class Home extends Fragment {
 
         tv1 = (TextView) view.findViewById(R.id.textView1);
 
-        setText();
+
 
         // Get ListView object from xml
         listView = (ListView) view.findViewById(com.parse.integratingfacebooktutorial.R.id.driverList);
@@ -89,8 +93,11 @@ public class Home extends Fragment {
                     tripDetail.setSource((String) trips.get("Source"));
                     tripDetail.setDestination((String) trips.get("Destination"));
                     //tripDetail.setCreateBy(trips.get("CreateBy"));
+                    ParseObject parseObject = (ParseObject)trips.get("CreateBy");
+
+                    tripDetail.setName(getCreator(parseObject));
                     tripDetail.setObjectId(trips.getObjectId());
-                    //tripDetail.setCreateBy((JSONObject) trips.get("CreateBy"));
+                    //tripDetail.setCreateBy((ParseObject) trips.get("CreateBy"));
                     trip.add(tripDetail);
                 }
             }
@@ -152,7 +159,28 @@ public class Home extends Fragment {
                 }
             }
         });
+        setText();
         return view;
+    }
+
+    private String getCreator(ParseObject parseObject){
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
+        query.whereEqualTo("objectId", parseObject.getObjectId().toString());
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> parseObjects, ParseException e) {
+                if (e == null) {
+                    for (ParseObject object : parseObjects) {
+                        // This does not require a network access.
+                        creatorName = object.getString("name");
+                    }
+
+                } else {
+                    Log.d("score", "Error: " + e.getMessage());
+                    creatorName = " Not found Name";
+                }
+            }
+        });
+        return creatorName;
     }
 
     public void setText(){

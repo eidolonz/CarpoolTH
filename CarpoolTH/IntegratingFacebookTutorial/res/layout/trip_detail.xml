@@ -62,10 +62,12 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:id="@+id/icnPhone"
                             android:src="@drawable/ic_phone"/>
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:id="@+id/icnFacebook"
                             android:src="@drawable/ic_facebook"/>
 
                     </LinearLayout>

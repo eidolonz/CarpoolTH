@@ -4,6 +4,8 @@ package com.parse.carpool;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
@@ -89,7 +91,8 @@ public class TripDetail extends ActionBarActivity {
     TextView tvStartTime;
     TextView tvReturnTime;
     TextView tvTravelDate;
-    ImageView imgDatePicker;
+    ImageView icnFacebook;
+    ImageView icnPhone;
     Button joinBtn;
     Button cancelBtn;
     Button deleteBtn;
@@ -130,6 +133,7 @@ public class TripDetail extends ActionBarActivity {
         getCurrentDetail();
         getTripDetail();
 
+
         sv_container = (ScrollView)findViewById(R.id.sv_container);
 
 
@@ -169,7 +173,7 @@ public class TripDetail extends ActionBarActivity {
             cancelBtn.setVisibility(Button.VISIBLE);
         }
 
-        String userId = "000";
+
         ParseObject userPointer = tripDetail.getCreateBy();
         if(userPointer != null) {
             userId = userPointer.getObjectId();
@@ -199,8 +203,21 @@ public class TripDetail extends ActionBarActivity {
         tvStartTime = (TextView) findViewById(R.id.tvStartTime);
         tvReturnTime = (TextView) findViewById(R.id.tvReturnTime);
         tvTravelDate = (TextView) findViewById(R.id.tvTravelDate);
+        icnFacebook = (ImageView) findViewById(R.id.icnFacebook);
+        icnPhone = (ImageView) findViewById(R.id.icnPhone);
 
-
+        icnFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callFacebook(tripDetail.getFacebookId());
+            }
+        });
+        icnPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callPhone(tripDetail.getPhoneNo());
+            }
+        });
         name.setText(tripDetail.getName());
         sourceTV.setText(tripDetail.getSource());
         destinationTV.setText(tripDetail.getDestination());
@@ -238,8 +255,26 @@ public class TripDetail extends ActionBarActivity {
 
 
 
+private void callFacebook(String FBid){
+    Intent intent;
+    try {
+        getApplicationContext().getPackageManager()
+                .getPackageInfo("com.facebook.katana", 0); //Checks if FB is even installed.
+        intent = new Intent(Intent.ACTION_VIEW,
+                //Uri.parse("fb://profile/10205925145306860")); //Trys to make intent with FB's URI
+                Uri.parse("fb://facewebmodal/f?href=https://www.facebook.com/" + FBid));
+    } catch (Exception e) {
+        intent =  new Intent(Intent.ACTION_VIEW,
+                Uri.parse("https://www.facebook.com/arkverse")); //catches and opens a url to the desired page
+    }
+    startActivity(intent);
+}
 
-
+private void callPhone(String PhoneNo){
+    Uri number = Uri.parse("tel:" + PhoneNo);
+    Intent callIntent = new Intent(Intent.ACTION_DIAL, number);
+    startActivity(callIntent);
+}
 
 
 

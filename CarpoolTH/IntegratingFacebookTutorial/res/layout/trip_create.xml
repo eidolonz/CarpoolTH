@@ -110,7 +110,6 @@
             android:text="Set location"
             android:id="@+id/setLocationBtn"
             android:background="#fff"/>
-
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

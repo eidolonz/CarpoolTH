@@ -17,6 +17,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.parse.ParseObject;
 import com.parse.integratingfacebooktutorial.R;
 
 public class
@@ -40,7 +41,7 @@ public class
     public class ViewHolder {
         TextView source;
         TextView destination;
-        TextView population;
+        TextView name;
         ImageView flag;
     }
 
@@ -67,6 +68,7 @@ public class
             // Locate the TextViews in listview_item.xml
             holder.source = (TextView) view.findViewById(R.id.source);
             holder.destination = (TextView) view.findViewById(R.id.destination);
+            holder.name = (TextView) view.findViewById(R.id.name);
             //holder.population = (TextView) view.findViewById(R.id.createBy);
             view.setTag(holder);
         } else {
@@ -75,6 +77,8 @@ public class
         // Set the results into TextViews
         holder.source.setText(triplist.get(position).getSource());
         holder.destination.setText(triplist.get(position).getDestination());
+        //ParseObject parseObject = triplist.get(position).getCreateBy();
+        holder.name.setText(triplist.get(position).getName());
         //holder.population.setText(triplist.get(position).getCreateBy().getString("name"));
         // Listen for ListView Item Click
         view.setOnClickListener(new OnClickListener() {
