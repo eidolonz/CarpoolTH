@@ -5,6 +5,7 @@ import android.app.Application;
 import com.facebook.FacebookSdk;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseObject;
 
 public class IntegratingFacebook extends Application {
 
@@ -15,6 +16,10 @@ public class IntegratingFacebook extends Application {
     super.onCreate();
 
       FacebookSdk.sdkInitialize(getApplicationContext());
+      // Register your parse models here
+      ParseObject.registerSubclass(Message.class);
+
+      Parse.enableLocalDatastore(this);
 
       Parse.initialize(this,
               "LeZCvTlDl3haYiWuS0AxMoZyGgKVumut8DCO4sbC",

@@ -1,14 +1,18 @@
 package com.parse.carpool;
 
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -43,7 +47,7 @@ import java.util.List;
 /**
  * Created by JUMRUS on 17/9/2558.
  */
-public class TripDetail extends ActionBarActivity {
+public class TripDetail extends AppCompatActivity {
     public List<ParseObject> ob;
     public List<Trip> trip = new ArrayList<Trip>();
     public Trip tripDetail = new Trip();
@@ -96,6 +100,7 @@ public class TripDetail extends ActionBarActivity {
     Button joinBtn;
     Button cancelBtn;
     Button deleteBtn;
+    Button chatBtn;
 
     GoogleDirection gd;
     Document mDoc;
@@ -118,6 +123,7 @@ public class TripDetail extends ActionBarActivity {
     private double latDes = 0.00;
     private double longDes = 0.00;
     private boolean isRun = false;
+    private Dialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -246,8 +252,19 @@ public class TripDetail extends ActionBarActivity {
         userProfilePictureView = (ProfilePictureView) findViewById(R.id.userProfilePicture);
         //Fetch Facebook user info if it is logged
         updateViewsWithProfileInfo();
-        setUpMapIfNeeded();
 
+        chatBtn = (Button) findViewById(R.id.chatBtn);
+        chatBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplication(), ChatActivity.class);
+                intent.putExtra("RoomId", tripDetail.getObjectId());
+                String a = tripDetail.getFacebookId();
+                intent.putExtra("FbId", tripDetail.getFacebookId());
+                startActivity(intent);
+            }
+        });
+        setUpMapIfNeeded();
     }
 
 
@@ -263,6 +280,7 @@ private void callFacebook(String FBid){
         intent = new Intent(Intent.ACTION_VIEW,
                 //Uri.parse("fb://profile/10205925145306860")); //Trys to make intent with FB's URI
                 Uri.parse("fb://facewebmodal/f?href=https://www.facebook.com/" + FBid));
+                //Uri.parse("fb://facewebmodal/f?href=https://www.facebook.com/" + FBid));
     } catch (Exception e) {
         intent =  new Intent(Intent.ACTION_VIEW,
                 Uri.parse("https://www.facebook.com/arkverse")); //catches and opens a url to the desired page
@@ -281,6 +299,7 @@ private void callPhone(String PhoneNo){
 
 
 private void getTripDetail(){
+
         try {
             ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("CreateTrip");
             query.whereEqualTo("objectId", tripId);
@@ -312,7 +331,7 @@ private void getTripDetail(){
                     }*/
                     setPassengerId();
                 }
-                tripDetail.setStartHour((int)trips.get("StartHour"));
+                tripDetail.setStartHour((int) trips.get("StartHour"));
                 tripDetail.setStartMinute((int) trips.get("StartMinute"));
                 tripDetail.setReturnHour((int) trips.get("ReturnHour"));
                 tripDetail.setReturnMinute((int) trips.get("ReturnMinute"));
@@ -650,7 +669,6 @@ private void getTripDetail(){
     }
 
     protected  void setUpMapIfNeeded() {
-
         if(googleMap == null) {
 
             googleMap = ((WorkaroundMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
@@ -690,6 +708,7 @@ private void getTripDetail(){
             }
         }
         googleMap.setMyLocationEnabled(true);
+
     }
 
 

@@ -34,6 +34,8 @@ import java.util.Objects;
  * Created by JUMRUS on 12/9/2558.
  */
 public class Home extends Fragment {
+    private Dialog progressDialog;
+
     private static View view;
     private static TextView tv1;
     private String name = "Null";
@@ -119,27 +121,31 @@ public class Home extends Fragment {
         listView.setAdapter(adapter);
 
         // ListView Item Click Listener
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-
-                // ListView Clicked item index
-                int itemPosition = position;
-
-                // ListView Clicked item value
-                String itemValue = (String) listView.getItemAtPosition(position);
-                // Show Alert
-                Toast.makeText(getActivity(),
-                        "Position :" + itemPosition + "  ListItem : " + itemValue, Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(getActivity(), TripDetail.class);
-                startActivity(intent);
-
-
-            }
-
-        });
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view,
+//                                    int position, long id) {
+//                progressDialog = new ProgressDialog(getActivity());
+//                progressDialog.show();
+//
+//                // ListView Clicked item index
+//                int itemPosition = position;
+//
+//                // ListView Clicked item value
+//                String itemValue = (String) listView.getItemAtPosition(position);
+//                // Show Alert
+//                Toast.makeText(getActivity(),
+//                        "Position :" + itemPosition + "  ListItem : " + itemValue, Toast.LENGTH_LONG).show();
+//                Intent intent = new Intent(getActivity(), TripDetail.class);
+//
+//                startActivity(intent);
+//                progressDialog.dismiss();
+//
+//
+//            }
+//
+//        });
 
         listView.setVisibility(ListView.GONE);
         this.isActShow = false;

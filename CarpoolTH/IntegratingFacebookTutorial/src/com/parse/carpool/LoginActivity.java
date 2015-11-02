@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -28,7 +29,7 @@ import com.parse.integratingfacebooktutorial.R;
 import java.util.Arrays;
 import java.util.List;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends AppCompatActivity {
     boolean doubleBackToExitPressedOnce = false;
 
   private Dialog progressDialog;

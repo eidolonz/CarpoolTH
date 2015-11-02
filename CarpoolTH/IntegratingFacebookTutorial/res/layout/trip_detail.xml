@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:facebook="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/tools"
     android:id="@+id/sv_container"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -8,10 +9,12 @@
     android:background="#dddedd"
     android:scrollbars="none"
     android:padding="10dp">
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical" >>
+
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -56,19 +59,24 @@
                     android:orientation="vertical"
                     >
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
                         <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             android:id="@+id/icnPhone"
                             android:src="@drawable/ic_phone"/>
                         <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             android:id="@+id/icnFacebook"
                             android:src="@drawable/ic_facebook"/>
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:text="Start Chat"
+                            android:id="@+id/chatBtn"/>
 
                     </LinearLayout>
                 </LinearLayout>

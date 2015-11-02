@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.Attributes;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -24,6 +26,7 @@ public class
         ListViewAdapter extends BaseAdapter {
 
     // Declare Variables
+    private Dialog progressDialog;
     Context context;
     LayoutInflater inflater;
     private List<Trip> triplist = null;
@@ -85,6 +88,9 @@ public class
 
             @Override
             public void onClick(View arg0) {
+
+
+
                 // Send single item click data to SingleItemView Class
                 Intent intent = new Intent(context, TripDetail.class);
                 // Pass all data rank
@@ -94,6 +100,7 @@ public class
                         (triplist.get(position).getName()));
                 // Start SingleItemView Class
                 context.startActivity(intent);
+
             }
         });
         return view;
