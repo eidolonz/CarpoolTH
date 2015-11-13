@@ -13,6 +13,8 @@ public class User {
     private int rater;
     private Object profile;
     private Object trip;
+    private int ratingCounter;
+    private float totalRating;
 
 
     public String getObjectId() {
@@ -69,5 +71,21 @@ public class User {
 
     public void setTrip(Object trip) {
         this.trip = trip;
+    }
+
+    public int getRatingCounter() {
+        return ratingCounter;
+    }
+
+    public void setRatingCounter(int ratingCounter) {
+        this.ratingCounter = ratingCounter;
+    }
+
+    public float getTotalRating() {
+        return totalRating;
+    }
+
+    public void setTotalRating(float totalRating) {
+        this.totalRating = totalRating;
     }
 }

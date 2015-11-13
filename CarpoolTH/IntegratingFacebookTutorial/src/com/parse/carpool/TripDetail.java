@@ -253,6 +253,22 @@ public class TripDetail extends AppCompatActivity {
         //Fetch Facebook user info if it is logged
         updateViewsWithProfileInfo();
 
+
+        userProfilePictureView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseObject user = tripDetail.getCreateBy();
+                String curUserId = "";
+                if(user != null) {
+                    curUserId = user.getObjectId();
+                }
+                Intent intent = new Intent(getApplicationContext(), UserDetailActivity.class);
+                intent.putExtra("user", curUserId);
+                intent.putExtra("fbId", tripDetail.getFacebookId());
+                startActivity(intent);
+            }
+        });
+
         chatBtn = (Button) findViewById(R.id.chatBtn);
         chatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -260,7 +276,7 @@ public class TripDetail extends AppCompatActivity {
                 Intent intent = new Intent(getApplication(), ChatActivity.class);
                 intent.putExtra("RoomId", tripDetail.getObjectId());
                 String a = tripDetail.getFacebookId();
-                intent.putExtra("FbId", tripDetail.getFacebookId());
+                intent.putExtra("FbId", getCurrentFacebookId());
                 startActivity(intent);
             }
         });
@@ -642,6 +658,20 @@ private void getTripDetail(){
         Intent i = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(i);
         finish();
+    }
+    private String getCurrentFacebookId(){
+        JSONObject userProfile = currentUser.getJSONObject("profile");
+        try {
+            if (userProfile.has("facebookId")) {
+                String fbId = userProfile.getString("facebookId");
+                return  fbId;
+            } else {
+
+            }
+        }catch (JSONException e){
+
+        }
+        return null;
     }
 
     private void updateViewsWithProfileInfo() {

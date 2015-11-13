@@ -35,7 +35,7 @@ public class ChatListAdapter extends ArrayAdapter<Message> {
                     inflate(R.layout.chat_item, parent, false);
             final ViewHolder holder = new ViewHolder();
             holder.imageLeft = (ProfilePictureView)convertView.findViewById(R.id.userProfilePictureLeft);
-            holder.imageRight = (ProfilePictureView)convertView.findViewById(R.id.userProfilePictureRight);
+//            holder.imageRight = (ProfilePictureView)convertView.findViewById(R.id.userProfilePictureRight);
             holder.body = (TextView)convertView.findViewById(R.id.tvBody);
             convertView.setTag(holder);
         }
@@ -45,14 +45,14 @@ public class ChatListAdapter extends ArrayAdapter<Message> {
         // Show-hide image based on the logged-in user.
         // Display the profile image to the right for our user, left for other users.
         if (isMe) {
-            holder.imageRight.setVisibility(View.VISIBLE);
+//            holder.imageRight.setVisibility(View.VISIBLE);
             holder.imageLeft.setVisibility(View.GONE);
             holder.body.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
             String a = message.getFacebookId();
-            holder.imageRight.setProfileId(message.getFacebookId());
+//            holder.imageRight.setProfileId(message.getFacebookId());
         } else {
             holder.imageLeft.setVisibility(View.VISIBLE);
-            holder.imageRight.setVisibility(View.GONE);
+//            holder.imageRight.setVisibility(View.GONE);
             holder.body.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
             holder.imageLeft.setProfileId(message.getFacebookId());
         }

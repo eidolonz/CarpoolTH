@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <com.facebook.login.widget.ProfilePictureView
+            android:id="@+id/userProfilePicture"
+            android:layout_height="70dp"
+            android:layout_width="70dp"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            facebook:com_facebook_preset_size="small" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Peerapon Jumruswittayawong"
+                android:id="@+id/raterTv"
+                android:textSize="20sp"
+                android:singleLine="true"
+                android:textStyle="bold"
+                />
+            <RatingBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:isIndicator="true"
+                android:id="@+id/ratingReview"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="content"
+        android:singleLine="true"
+        android:id="@+id/contentTv"
+        android:textSize="15sp" />
+</LinearLayout>

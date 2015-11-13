@@ -23,15 +23,15 @@
         android:lines="3"
         android:layout_marginRight="64dp"
         android:layout_width="match_parent"
-        android:layout_height="64dp">
-    </TextView>
-    <com.facebook.login.widget.ProfilePictureView
-        android:id="@+id/userProfilePictureRight"
-        android:contentDescription="My profile pic"
-        android:layout_marginLeft="-64dp"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        facebook:com_facebook_preset_size="large" />
+        android:layout_height="64dp"/>
+    <!--</TextView>-->
+    <!--<com.facebook.login.widget.-->
+        <!--android:id="@+id/userProfilePictureRight"-->
+        <!--android:contentDescription="My profile pic"-->
+        <!--android:layout_marginLeft="-64dp"-->
+        <!--android:layout_width="64dp"-->
+        <!--android:layout_height="64dp"-->
+        <!--facebook:com_facebook_preset_size="large" />-->
     <!--<ImageView-->
         <!--android:id="@+id/ivProfileRight"-->
         <!--android:contentDescription="My profile pic"-->

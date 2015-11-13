@@ -18,6 +18,7 @@ public class IntegratingFacebook extends Application {
       FacebookSdk.sdkInitialize(getApplicationContext());
       // Register your parse models here
       ParseObject.registerSubclass(Message.class);
+      ParseObject.registerSubclass(Review.class);
 
       Parse.enableLocalDatastore(this);
 
