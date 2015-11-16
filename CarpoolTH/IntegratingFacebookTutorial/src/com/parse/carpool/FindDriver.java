@@ -18,6 +18,10 @@ import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,6 +88,8 @@ public class FindDriver extends ActionBarActivity {
                     tripDetail.setSource((String) trips.get("Source"));
                     tripDetail.setDestination((String) trips.get("Destination"));
                     tripDetail.setCreateBy(trips.getParseObject("CreateBy"));
+                    tripDetail.setFacebookId(trips.getLong("FacebookId"));
+                    tripDetail.setName(trips.getString("OwnerName"));
                     tripDetail.setObjectId(trips.getObjectId());
                     //tripDetail.setCreateBy((JSONObject) trips.get("CreateBy"));
                     trip.add(tripDetail);

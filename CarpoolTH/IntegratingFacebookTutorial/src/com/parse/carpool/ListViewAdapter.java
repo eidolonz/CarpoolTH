@@ -19,6 +19,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.login.widget.ProfilePictureView;
 import com.parse.ParseObject;
 import com.parse.integratingfacebooktutorial.R;
 
@@ -45,6 +46,7 @@ public class
         TextView source;
         TextView destination;
         TextView name;
+        ProfilePictureView profilePictureView;
         ImageView flag;
     }
 
@@ -72,6 +74,7 @@ public class
             holder.source = (TextView) view.findViewById(R.id.source);
             holder.destination = (TextView) view.findViewById(R.id.destination);
             holder.name = (TextView) view.findViewById(R.id.name);
+            holder.profilePictureView = (ProfilePictureView) view.findViewById(R.id.userProfilePicture);
             //holder.population = (TextView) view.findViewById(R.id.createBy);
             view.setTag(holder);
         } else {
@@ -82,6 +85,7 @@ public class
         holder.destination.setText(triplist.get(position).getDestination());
         //ParseObject parseObject = triplist.get(position).getCreateBy();
         holder.name.setText(triplist.get(position).getName());
+        holder.profilePictureView.setProfileId(triplist.get(position).getFacebookId());
         //holder.population.setText(triplist.get(position).getCreateBy().getString("name"));
         // Listen for ListView Item Click
         view.setOnClickListener(new OnClickListener() {

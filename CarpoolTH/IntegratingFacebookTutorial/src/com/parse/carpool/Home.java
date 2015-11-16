@@ -88,16 +88,20 @@ public class Home extends Fragment {
             for (ParseObject trips : ob) {
                 ParseObject userPointer = trips.getParseObject("CreateBy");
                 String userId = userPointer.getObjectId();
-
-                if( currentUser.getObjectId().equals(userId) ) {
+                String userTrip = currentUser.getString("Trip");
+                if(userTrip == null){
+                    userTrip = "";
+                }
+                if( currentUser.getObjectId().equals(userId) || userTrip.equals(trips.getObjectId()) ) {
                     Trip tripDetail = new Trip();
 
                     tripDetail.setSource((String) trips.get("Source"));
                     tripDetail.setDestination((String) trips.get("Destination"));
                     //tripDetail.setCreateBy(trips.get("CreateBy"));
-                    ParseObject parseObject = (ParseObject)trips.get("CreateBy");
+                    //ParseObject parseObject = (ParseObject)trips.get("CreateBy");
+                    tripDetail.setFacebookId(trips.getLong("FacebookId"));
+                    tripDetail.setName(trips.getString("OwnerName"));
 
-                    tripDetail.setName(getCreator(parseObject));
                     tripDetail.setObjectId(trips.getObjectId());
                     //tripDetail.setCreateBy((ParseObject) trips.get("CreateBy"));
                     trip.add(tripDetail);

@@ -169,7 +169,6 @@ public class TripDetail extends AppCompatActivity {
                 deleteTrip(false);
             }
         });
-
         if(isFull && !isJoin){
             joinBtn.setClickable(false);
             joinBtn.setBackgroundColor(Color.LTGRAY);
@@ -416,11 +415,25 @@ private void getTripDetail(){
         HashMap hm = (HashMap) tripDetail.getPassengerId();
         if (hm!=null) {
             if (hm.size() >= 1) {
-                HashMap userDetail = (HashMap) hm.get("PassengerId0");
+                final HashMap userDetail = (HashMap) hm.get("PassengerId0");
                 co_tripperImg01.setProfileId((String) userDetail.get("FacebookId"));
                 passengerName1.setText((String) userDetail.get("Name"));
-                setJoin(userDetail,0);
+                setJoin(userDetail, 0);
                 passenger1.setVisibility(TableRow.VISIBLE);
+                passenger1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ParseUser user = (ParseUser)userDetail.get("UserId");
+                        String curUserId = "";
+                        if(user != null) {
+                            curUserId = user.getObjectId();
+                        }
+                        Intent intent = new Intent(getApplicationContext(), UserDetailActivity.class);
+                        intent.putExtra("user", curUserId);
+                        intent.putExtra("fbId", (String)userDetail.get("FacebookId"));
+                        startActivity(intent);
+                    }
+                });
             }
             if (hm.size() >= 2) {
                 HashMap userDetail = (HashMap) hm.get("PassengerId1");
@@ -457,6 +470,9 @@ private void getTripDetail(){
                 setJoin(userDetail, 5);
                 passenger6.setVisibility(TableRow.VISIBLE);
                 isFull = true;
+            }
+            if(hm.size() >= tripDetail.getPassenger()){
+                this.isFull = true;
             }
         }
 
@@ -644,8 +660,8 @@ private void getTripDetail(){
                     @Override
                     public void done(ParseObject parseObject, ParseException e) {
                         if (e == null) {
-                            object.put("Trip", tripDetail.getObjectId());
-                            object.saveInBackground();
+                            parseObject.put("Trip", tripDetail.getObjectId());//object
+                            parseObject.saveInBackground();
                         }
                     }
                 });
