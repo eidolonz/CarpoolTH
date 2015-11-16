@@ -40,6 +40,7 @@ public class FindDriver extends ActionBarActivity {
     double lonDestination2;
     double latSource2;
     double lonSource2;
+    int route;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +50,7 @@ public class FindDriver extends ActionBarActivity {
         lonDestination2 = Double.parseDouble(i.getStringExtra("SetLongitudeDestination"));
         latSource2 = Double.parseDouble(i.getStringExtra("SetLatitudeSource"));
         lonSource2 = Double.parseDouble(i.getStringExtra("SetLongitudeSource"));
+        route = Integer.parseInt(i.getStringExtra("Route"));
 
         // Get ListView object from xml
         listView = (ListView) findViewById(com.parse.integratingfacebooktutorial.R.id.driverList);
@@ -70,9 +72,12 @@ public class FindDriver extends ActionBarActivity {
                 double lonDestination1 =  Double.parseDouble((String) trips.get("LongitudeDestination"));
                 double latSource1 =  Double.parseDouble((String) trips.get("LatitudeSource"));
                 double lonSource1 =  Double.parseDouble((String) trips.get("LongitudeSource"));
+                int route1 = Integer.parseInt((String)trips.get("Route")) ;
 
 
-                if (haveRsine(latDestination1,lonDestination1,latDestination2,lonDestination2) <= 10 && haveRsine(latSource1,lonSource1,latSource2,lonSource2) <= 10) {
+                if (haveRsine(latDestination1,lonDestination1,latDestination2,lonDestination2) <= 2
+                        && haveRsine(latSource1,lonSource1,latSource2,lonSource2) <= 2
+                        && route == route1) {
 
                     Trip tripDetail = new Trip();
 

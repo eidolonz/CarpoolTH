@@ -56,6 +56,7 @@ public class TripDetail extends AppCompatActivity {
 
     protected String userId;
     protected String passengerName;
+    protected String facebookId;
 
     LinearLayout travelDaily;
     LinearLayout travelOn;
@@ -123,7 +124,7 @@ public class TripDetail extends AppCompatActivity {
     private double latDes = 0.00;
     private double longDes = 0.00;
     private boolean isRun = false;
-    private Dialog progressDialog;
+    private int checkRoute ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -328,6 +329,7 @@ private void getTripDetail(){
                     this.longSource = Double.parseDouble(trips.get("LongitudeSource").toString());
                     this.latDes = Double.parseDouble(trips.get("LatitudeDestination").toString());
                     this.longDes = Double.parseDouble(trips.get("LongitudeDestination").toString());
+                    this.checkRoute = Integer.parseInt(trips.getString("Route").toString());
                 }
 
                 if(trips.get("daily") != null){
@@ -462,7 +464,7 @@ private void getTripDetail(){
 
     public void setJoin(HashMap userDetail, int position){
         String fbId =  (String)userDetail.get("FacebookId");
-        if( fbId.equals(this.userId)){
+        if( fbId.equals(this.facebookId)){
             this.isJoin = true;
             this.position = position;
         }
@@ -529,7 +531,7 @@ private void getTripDetail(){
         currentUser = ParseUser.getCurrentUser();
         JSONObject userProfile = currentUser.getJSONObject("profile");
         try {
-            this.userId = userProfile.getString("facebookId");
+            this.facebookId = userProfile.getString("facebookId");
             this.passengerName = userProfile.getString("name");
         }catch (JSONException e){}
     }
@@ -625,7 +627,7 @@ private void getTripDetail(){
                         hm = new HashMap();
                     }
 
-                    userDetail.put("FacebookId", userId);
+                    userDetail.put("FacebookId", facebookId);
                     userDetail.put("UserId", currentUser);
                     userDetail.put("Name", passengerName);
 
@@ -716,10 +718,20 @@ private void getTripDetail(){
 
                 gd.setLogging(true);
                 gd.request(new LatLng(latSource, longSource), new LatLng(latDes, longDes), GoogleDirection.MODE_DRIVING);
+
                 gd.setOnDirectionResponseListener(new GoogleDirection.OnDirectionResponseListener() {
-                    public void onResponse(String status, Document doc, GoogleDirection gd) {
+                    public void onResponse(String status, String route, Document doc, GoogleDirection gd) {
                         mDoc = doc;
-                        googleMap.addPolyline(gd.getPolyline(doc, 3, Color.RED));
+                        if( checkRoute == 0){
+                            googleMap.addPolyline(gd.getPolyline(doc, 3, Color.RED, 1));
+                            googleMap.addPolyline(gd.getPolyline(doc, 3, Color.RED, 2));
+                        }
+                        else if(checkRoute ==1) {
+                            googleMap.addPolyline(gd.getPolyline(doc, 3, Color.RED, 1));
+                        }
+                        else if( checkRoute == 2){
+                            googleMap.addPolyline(gd.getPolyline(doc, 3, Color.RED, 2));
+                        }
                         googleMap.addMarker(new MarkerOptions().position(new LatLng(latSource, longSource))
                                 .icon(BitmapDescriptorFactory.defaultMarker(
                                         BitmapDescriptorFactory.HUE_GREEN)));

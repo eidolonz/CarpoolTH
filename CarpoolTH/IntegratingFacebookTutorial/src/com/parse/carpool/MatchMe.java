@@ -85,11 +85,12 @@ public class MatchMe extends Fragment{
         startActivity(intent);
     }
     public void findDriver(){
-        Intent intent = new Intent(getActivity(), FindDriver.class); //FindDriver.class
+        Intent intent = new Intent(getActivity(), PassengerMapActivity.class); //FindDriver.class
         intent.putExtra("SetLatitudeDestination", "0");
         intent.putExtra("SetLongitudeDestination", "0");
         intent.putExtra("SetLatitudeSource", "0");
         intent.putExtra("SetLongitudeSource", "0");
+        intent.putExtra("Route", 0);
         startActivity(intent);
 
 

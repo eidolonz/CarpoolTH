@@ -4,6 +4,7 @@ package com.parse.carpool;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.integratingfacebooktutorial.R;
 
 import org.json.JSONObject;
+import org.w3c.dom.Document;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,6 +47,7 @@ import java.util.List;
 
 public class PassengerMapActivity extends ActionBarActivity {
 
+
     AutoCompleteTextView atvPlaces;
     AutoCompleteTextView atvPlaces2;
     DownloadTask placesDownloadTask;
@@ -52,7 +55,7 @@ public class PassengerMapActivity extends ActionBarActivity {
     ParserTask placesParserTask;
     ParserTask placeDetailsParserTask;
     GoogleMap googleMap;
-
+    GoogleDirection gd;
     boolean atvPlacesChecking = false;
     boolean atvPlacesChecking2 = false;
     final int PLACES=0;
@@ -66,13 +69,16 @@ public class PassengerMapActivity extends ActionBarActivity {
     protected double latitudeGPS = 0;
     protected double longitudeGPS = 0;
     private String getReference ;
-    private Button saveBtn;
+    private Button saveBtn, routeBtnOne, routeBtnSecond, routeBtnThird ;
     protected  String _nameReference;
     protected  String _nameUser;
     protected  String _phonenumber;
     protected  String getCurrentLocationName;
     protected  String getDestinationLocationName;
     private String sourceDetail;
+    private boolean isRun = false;
+    private int getRouteIndex = 0;
+    Document mDoc;
     private String destinationDetail;
     public PassengerMapActivity() {
     }
@@ -81,39 +87,53 @@ public class PassengerMapActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-
+        gd = new GoogleDirection(this);
         //saveLocation Button
         saveBtn = (Button) findViewById(R.id.saveLocation);
-        saveBtn.setText("Serch");
+        saveBtn.setText("Search");
+
+        routeBtnOne = (Button) findViewById(R.id.route1);
+        routeBtnSecond = (Button) findViewById(R.id.route2);
+
+
+
+
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            if (sourceDetail == null){
-                Toast.makeText(getApplicationContext(),
-                        "Please enter pickup location", Toast.LENGTH_LONG).show();
-            }else if (destinationDetail == null){
-                Toast.makeText(getApplicationContext(),
-                        "Please enter destination location", Toast.LENGTH_LONG).show();
-            }else{
-                Intent intent = new Intent(Intent.ACTION_CALL);
-                if( destination.get(0) != null && source.get(0) !=null) {
-                    String getLatitudeDestination = destination.get(0).toString();
-                    String getLongitudeDestination = destination.get(1).toString();
-                    intent.putExtra("SetLatitudeDestination", getLatitudeDestination);
-                    intent.putExtra("SetLongitudeDestination", getLongitudeDestination);
+                if (sourceDetail == null){
+                    Toast.makeText(getApplicationContext(),
+                            "Please enter pickup location", Toast.LENGTH_LONG).show();
+                }else if (destinationDetail == null){
+                    Toast.makeText(getApplicationContext(),
+                            "Please enter destination location", Toast.LENGTH_LONG).show();
+                }else{
+                    Intent intent = new Intent(Intent.ACTION_CALL);
+                    if( destination.get(0) != null && source.get(0) !=null) {
+                        String getLatitudeDestination = destination.get(0).toString();
+                        String getLongitudeDestination = destination.get(1).toString();
+                        String routeIndex = ""+ getRouteIndex  ;
+                        intent.putExtra("SetLatitudeDestination", getLatitudeDestination);
+                        intent.putExtra("SetLongitudeDestination", getLongitudeDestination);
+                        intent.putExtra("Route",routeIndex);
 
-                    String getLatitudeSource = source.get(0).toString();
-                    String getLongitudeSource = source.get(1).toString();
-                    intent.putExtra("SetLatitudeSource", getLatitudeSource);
-                    intent.putExtra("SetLongitudeSource", getLongitudeSource);
+                        String getLatitudeSource = source.get(0).toString();
+                        String getLongitudeSource = source.get(1).toString();
+                        intent.putExtra("SetLatitudeSource", getLatitudeSource);
+                        intent.putExtra("SetLongitudeSource", getLongitudeSource);
+                    }
+
+
+                    intent.putExtra("sourceDetail", sourceDetail);
+                    intent.putExtra("destinationDetail", destinationDetail);
+
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)     ;
+                    intent.setClass(getApplicationContext(), FindDriver.class);
+                    startActivity(intent);
+                    finish();
+
+
                 }
-
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)     ;
-                intent.setClass(getApplicationContext(), FindDriver.class);
-                startActivity(intent);
-                finish();
-
-            }
             }
         });
 
@@ -566,6 +586,7 @@ public class PassengerMapActivity extends ActionBarActivity {
 
 
 
+                    gd.setLogging(true);
                     if( atvPlacesChecking == true) {
 
                         // Getting latitude from the parsed data
@@ -639,18 +660,74 @@ public class PassengerMapActivity extends ActionBarActivity {
                         // Adding the marker in the Google Map
                         Marker marker = googleMap.addMarker(options);
                         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitudeDestination, longitudeDestination), 13));
+
+
                         markerList2.add(marker);
                         markerList2.contains(marker);
                     }
 
-
+                    if(  source.size() > 0 && destination.size() > 0) {
+                        runDirection();
+                    }
 
             }
+
+
+        }
+
+        public void runDirection() {
+            gd.request(new LatLng(source.get(0), source.get(1)), new LatLng(destination.get(0), destination.get(1)), GoogleDirection.MODE_DRIVING);
+            gd.setOnDirectionResponseListener(new GoogleDirection.OnDirectionResponseListener() {
+
+                                                  public void onResponse(String status, String route, Document doc, GoogleDirection gd) {
+                                                      mDoc = doc;
+                                                      googleMap.addPolyline(gd.getPolyline(doc, 3, Color.RED, 1));
+                                                      googleMap.addPolyline(gd.getPolyline(doc, 3, Color.RED, 2));
+
+                                                      googleMap.addMarker(new MarkerOptions().position(new LatLng(source.get(0), source.get(1)))
+                                                              .icon(BitmapDescriptorFactory.defaultMarker(
+                                                                      BitmapDescriptorFactory.HUE_GREEN)));
+
+                                                      googleMap.addMarker(new MarkerOptions().position(new LatLng(destination.get(0), destination.get(1)))
+                                                              .icon(BitmapDescriptorFactory.defaultMarker(
+                                                                      BitmapDescriptorFactory.HUE_BLUE)));
+
+
+                                                  }
+                                              }
+
+
+            );
+
+
+            routeBtnOne.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    googleMap.clear();
+                    googleMap.addPolyline(gd.getPolyline(mDoc, 3, Color.RED, 1));
+                    getRouteIndex = 1;
+                }
+            });
+
+
+            routeBtnSecond.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    googleMap.clear();
+                    googleMap.addPolyline(gd.getPolyline(mDoc, 3, Color.RED, 2));
+                    getRouteIndex = 2;
+                }
+            });
+
+
+
         }
 
 
-
     }
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

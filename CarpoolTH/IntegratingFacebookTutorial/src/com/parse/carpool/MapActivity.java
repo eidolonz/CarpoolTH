@@ -47,6 +47,7 @@ import java.util.List;
 
 public class MapActivity extends ActionBarActivity {
 
+
     AutoCompleteTextView atvPlaces;
     AutoCompleteTextView atvPlaces2;
     DownloadTask placesDownloadTask;
@@ -68,7 +69,7 @@ public class MapActivity extends ActionBarActivity {
     protected double latitudeGPS = 0;
     protected double longitudeGPS = 0;
     private String getReference ;
-    private Button saveBtn;
+    private Button saveBtn, routeBtnOne, routeBtnSecond, routeBtnThird ;
     protected  String _nameReference;
     protected  String _nameUser;
     protected  String _phonenumber;
@@ -76,6 +77,7 @@ public class MapActivity extends ActionBarActivity {
     protected  String getDestinationLocationName;
     private String sourceDetail;
     private boolean isRun = false;
+    private int getRouteIndex = 0;
     Document mDoc;
     private String destinationDetail;
     public MapActivity() {
@@ -88,39 +90,48 @@ public class MapActivity extends ActionBarActivity {
         gd = new GoogleDirection(this);
         //saveLocation Button
         saveBtn = (Button) findViewById(R.id.saveLocation);
+
+        routeBtnOne = (Button) findViewById(R.id.route1);
+        routeBtnSecond = (Button) findViewById(R.id.route2);
+
+
+
+
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            if (sourceDetail == null){
-                Toast.makeText(getApplicationContext(),
-                        "Please enter pickup location", Toast.LENGTH_LONG).show();
-            }else if (destinationDetail == null){
-                Toast.makeText(getApplicationContext(),
-                        "Please enter destination location", Toast.LENGTH_LONG).show();
-            }else{
-                Intent intent = new Intent(Intent.ACTION_CALL);
-                if( destination.get(0) != null && source.get(0) !=null) {
-                    String getLatitudeDestination = destination.get(0).toString();
-                    String getLongitudeDestination = destination.get(1).toString();
-                    intent.putExtra("SetLatitudeDestination", getLatitudeDestination);
-                    intent.putExtra("SetLongitudeDestination", getLongitudeDestination);
+                if (sourceDetail == null){
+                    Toast.makeText(getApplicationContext(),
+                            "Please enter pickup location", Toast.LENGTH_LONG).show();
+                }else if (destinationDetail == null){
+                    Toast.makeText(getApplicationContext(),
+                            "Please enter destination location", Toast.LENGTH_LONG).show();
+                }else{
+                    Intent intent = new Intent(Intent.ACTION_CALL);
+                    if( destination.get(0) != null && source.get(0) !=null) {
+                        String getLatitudeDestination = destination.get(0).toString();
+                        String getLongitudeDestination = destination.get(1).toString();
+                        String routeIndex = ""+ getRouteIndex  ;
+                        intent.putExtra("SetLatitudeDestination", getLatitudeDestination);
+                        intent.putExtra("SetLongitudeDestination", getLongitudeDestination);
+                        intent.putExtra("Route",routeIndex);
 
-                    String getLatitudeSource = source.get(0).toString();
-                    String getLongitudeSource = source.get(1).toString();
-                    intent.putExtra("SetLatitudeSource", getLatitudeSource);
-                    intent.putExtra("SetLongitudeSource", getLongitudeSource);
+                        String getLatitudeSource = source.get(0).toString();
+                        String getLongitudeSource = source.get(1).toString();
+                        intent.putExtra("SetLatitudeSource", getLatitudeSource);
+                        intent.putExtra("SetLongitudeSource", getLongitudeSource);
+                    }
+
+
+                    intent.putExtra("sourceDetail", sourceDetail);
+                    intent.putExtra("destinationDetail", destinationDetail);
+
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)     ;
+                    intent.setClass(getApplicationContext(), CreateTrip.class);
+                    startActivity(intent);
+                    finish();
+
                 }
-
-
-                intent.putExtra("sourceDetail", sourceDetail);
-                intent.putExtra("destinationDetail", destinationDetail);
-
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)     ;
-                intent.setClass(getApplicationContext(), CreateTrip.class);
-                startActivity(intent);
-                finish();
-
-            }
             }
         });
 
@@ -653,7 +664,7 @@ public class MapActivity extends ActionBarActivity {
                         markerList2.contains(marker);
                     }
 
-                    if(  source.size() > 0 && destination.size() > 0){
+                    if(  source.size() > 0 && destination.size() > 0) {
                         runDirection();
                     }
 
@@ -662,30 +673,59 @@ public class MapActivity extends ActionBarActivity {
 
         }
 
-    public void runDirection(){
-        gd.request(new LatLng(source.get(0), source.get(1)), new LatLng(destination.get(0), destination.get(1)), GoogleDirection.MODE_DRIVING);
-        gd.setOnDirectionResponseListener(new GoogleDirection.OnDirectionResponseListener() {
-            public void onResponse(String status, Document doc, GoogleDirection gd) {
-                mDoc = doc;
-                googleMap.addPolyline(gd.getPolyline(doc, 3, Color.RED));
+        public void runDirection() {
+            gd.request(new LatLng(source.get(0), source.get(1)), new LatLng(destination.get(0), destination.get(1)), GoogleDirection.MODE_DRIVING);
+            gd.setOnDirectionResponseListener(new GoogleDirection.OnDirectionResponseListener() {
 
-                googleMap.addMarker(new MarkerOptions().position(new LatLng(source.get(0), source.get(1)))
-                        .icon(BitmapDescriptorFactory.defaultMarker(
-                                BitmapDescriptorFactory.HUE_GREEN)));
+                                                  public void onResponse(String status, String route, Document doc, GoogleDirection gd) {
+                                                      mDoc = doc;
+                                                      googleMap.addPolyline(gd.getPolyline(doc, 3, Color.RED, 1));
+                                                      googleMap.addPolyline(gd.getPolyline(doc, 3, Color.RED, 2));
 
-                googleMap.addMarker(new MarkerOptions().position(new LatLng(destination.get(0), destination.get(1)))
-                        .icon(BitmapDescriptorFactory.defaultMarker(
-                                BitmapDescriptorFactory.HUE_GREEN)));
-                if (!isRun) {
-                    gd.request(new LatLng(source.get(0), source.get(1)), new LatLng(destination.get(0), destination.get(1)), GoogleDirection.MODE_DRIVING);
-                    isRun = true;
+                                                      googleMap.addMarker(new MarkerOptions().position(new LatLng(source.get(0), source.get(1)))
+                                                              .icon(BitmapDescriptorFactory.defaultMarker(
+                                                                      BitmapDescriptorFactory.HUE_GREEN)));
+
+                                                      googleMap.addMarker(new MarkerOptions().position(new LatLng(destination.get(0), destination.get(1)))
+                                                              .icon(BitmapDescriptorFactory.defaultMarker(
+                                                                      BitmapDescriptorFactory.HUE_BLUE)));
+
+
+                                                  }
+                                              }
+
+
+            );
+
+
+            routeBtnOne.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    googleMap.clear();
+                    googleMap.addPolyline(gd.getPolyline(mDoc, 3, Color.RED, 1));
+                    getRouteIndex = 1;
                 }
+            });
 
-            }
-        });
+
+            routeBtnSecond.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    googleMap.clear();
+                    googleMap.addPolyline(gd.getPolyline(mDoc, 3, Color.RED, 2));
+                    getRouteIndex = 2;
+                }
+            });
+
+
+
+        }
+
+
     }
 
-    }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

@@ -3,6 +3,7 @@ package com.parse.carpool;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.DisplayMetrics;
@@ -42,7 +43,7 @@ public class GoogleDirection {
     public final static String MODE_DRIVING = "driving";
     public final static String MODE_WALKING = "walking";
     public final static String MODE_BICYCLING = "bicycling";
-
+    public final static String ROUTE = "ROUTE";
     public final static String STATUS_OK = "OK";
     public final static String STATUS_NOT_FOUND = "NOT_FOUND";
     public final static String STATUS_ZERO_RESULTS = "ZERO_RESULTS";
@@ -83,7 +84,7 @@ public class GoogleDirection {
     private boolean isCameraTilt = false;
     private boolean isCameraZoom = false;
     private boolean isAnimated = false;
-
+    private int routeIndexFirst, routeIndexSecond, routeIndexThird = 0;
     private Context mContext = null;
 
     public GoogleDirection(Context context) {
@@ -102,6 +103,8 @@ public class GoogleDirection {
         new RequestTask().execute(new String[]{ url });
         return url;
     }
+
+
 
     private class RequestTask extends AsyncTask<String, Void, Document> {
         protected Document doInBackground(String... url) {
@@ -126,14 +129,26 @@ public class GoogleDirection {
         protected void onPostExecute(Document doc) {
             super.onPostExecute(doc);
             if(mDirectionListener != null)
-                mDirectionListener.onResponse(getStatus(doc), doc, GoogleDirection.this);
+                mDirectionListener.onResponse(getStatus(doc), getRoute(doc), doc, GoogleDirection.this);
         }
 
         private String getStatus(Document doc) {
             NodeList nl1 = doc.getElementsByTagName("status");
+
             Node node1 = nl1.item(0);
+
+
             if(isLogging)
                 Log.i("GoogleDirection", "Status : " + node1.getTextContent());
+            return node1.getTextContent();
+        }
+
+        public String getRoute(Document doc){
+            NodeList nl2 = doc.getElementsByTagName("route");
+            Node node1 = nl2.item(0);
+
+            if(isLogging)
+                Log.i("GoogleDirection", "Route : " + node1.getNodeName() );
             return node1.getTextContent();
         }
     }
@@ -269,6 +284,17 @@ public class GoogleDirection {
             Log.i("GoogleDirection", "CopyRights : " + node1.getTextContent());
         return node1.getTextContent();
     }
+    public String getRoute(Document doc){
+        NodeList nl2 = doc.getElementsByTagName("route");
+        Node node1 = nl2.item(0);
+
+        if(isLogging)
+            Log.i("GoogleDirection", "Route : " + node1.getNodeName() );
+        return node1.getTextContent();
+    }
+
+
+
 
     public ArrayList<LatLng> getDirection(Document doc) {
         NodeList nl1, nl2, nl3;
@@ -309,6 +335,33 @@ public class GoogleDirection {
         return listGeopoints;
     }
 
+
+
+    public ArrayList<LatLng> getEndLocation(Document doc) {
+        NodeList nlRoute;
+        NodeList nl1, nl2, nlLeg;
+        ArrayList<LatLng> result = new ArrayList<LatLng>();
+        nlRoute = doc.getElementsByTagName("route");
+
+        if (nlRoute.getLength() > 0) {
+            for (int i = 0; i < nlRoute.getLength(); i++) {
+                Node nodeRoute = nlRoute.item(i);
+                nl1 = nodeRoute.getChildNodes();
+                Node nodeLeg = nl1.item(getNodeIndex(nl1, "leg"));
+                nlLeg = nodeLeg.getChildNodes();
+                Node node1 = nlLeg.item(getNodeIndex(nlLeg, "end_location"));
+                nl2 = node1.getChildNodes();
+                Node latNode = nl2.item(getNodeIndex(nl2, "lat"));
+                double lat = Double.parseDouble(latNode.getTextContent());
+                Node lngNode = nl2.item(getNodeIndex(nl2, "lng"));
+                double lng = Double.parseDouble(lngNode.getTextContent());
+                result.add(new LatLng(lat,lng));
+
+            }
+        }
+        return  result;
+    }
+
     public ArrayList<LatLng> getSection(Document doc) {
         NodeList nl1, nl2, nl3;
         ArrayList<LatLng> listGeopoints = new ArrayList<LatLng>();
@@ -331,12 +384,56 @@ public class GoogleDirection {
         return listGeopoints;
     }
 
-    public PolylineOptions getPolyline(Document doc, int width, int color) {
+
+
+
+
+    public PolylineOptions getPolyline(Document doc, int width, int color, int route) {
         ArrayList<LatLng> arr_pos = getDirection(doc);
+        ArrayList<LatLng> checkEndLocation = getEndLocation(doc);
         PolylineOptions rectLine = new PolylineOptions().width(dpToPx(width)).color(color);
-        for(int i = 0 ; i < arr_pos.size() ; i++)
-            rectLine.add(arr_pos.get(i));
+        if( route == 1) {
+            for (int i = 0; i < arr_pos.size(); i++) {
+                if (arr_pos.get(i).latitude == checkEndLocation.get(0).latitude && arr_pos.get(i).longitude == checkEndLocation.get(0).longitude) {
+                    rectLine.color(Color.RED);
+                    routeIndexFirst = i;
+                    routeIndexSecond = i;
+                    return rectLine;
+                }
+                rectLine.add(arr_pos.get(i));
+            }
+        }
+        else if ( route == 2){
+            for (int i = routeIndexSecond+1 ; i < arr_pos.size(); i++) {
+                if (arr_pos.get(i).latitude == checkEndLocation.get(1).latitude && arr_pos.get(i).longitude == checkEndLocation.get(1).longitude) {
+                    rectLine.color(Color.GREEN);
+                    routeIndexThird = i;
+                    return rectLine;
+                }
+                rectLine.add(arr_pos.get(i));
+            }
+        }
+        else if ( route == 3){
+            for (int i = routeIndexThird +1 ; i < arr_pos.size(); i++) {
+                rectLine.color(Color.BLUE);
+                routeIndexThird = i;
+                rectLine.add(arr_pos.get(i));
+            }
+            return rectLine;
+        }
         return rectLine;
+    }
+
+
+    public int getRouteIndexFirst(){
+        return routeIndexFirst;
+    }
+    public  int getRouteIndexSecond(){
+        return  routeIndexSecond;
+    }
+    public  int getRouteIndexThird(){
+        return  routeIndexThird;
+
     }
 
     private int getNodeIndex(NodeList nl, String nodename) {
@@ -391,7 +488,7 @@ public class GoogleDirection {
     }
 
     public interface OnDirectionResponseListener {
-        public void onResponse(String status, Document doc, GoogleDirection gd);
+        public void onResponse(String status, String route, Document doc, GoogleDirection gd);
     }
 
     public interface OnAnimateListener {

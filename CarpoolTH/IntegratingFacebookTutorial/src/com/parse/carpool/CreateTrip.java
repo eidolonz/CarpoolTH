@@ -97,6 +97,7 @@ public class CreateTrip extends ActionBarActivity {
     private Double longitudeSource;
     private DatePickerDialog datePickerDialog;
     private int year, month, day;
+    private String routeIndex;
     private String selectedDate;
     @Override
     protected void onCreate(Bundle saveInstanceState){
@@ -110,6 +111,7 @@ public class CreateTrip extends ActionBarActivity {
         longitudeDestination = Double.parseDouble(intent.getStringExtra("SetLongitudeDestination"));
         latitudeSource = Double.parseDouble(intent.getStringExtra("SetLatitudeSource"));
         longitudeSource = Double.parseDouble(intent.getStringExtra("SetLongitudeSource"));
+        routeIndex = intent.getStringExtra("Route");
 
         getUserDetail();
         setCurrentTimeOnView();
@@ -508,38 +510,39 @@ public class CreateTrip extends ActionBarActivity {
     public void saveTrip(){
         ParseUser currentUser = ParseUser.getCurrentUser();
         final ParseObject dataObject = new ParseObject("CreateTrip");
-            try {
-                if (isDaily) {
-                    dataObject.put("daily", week);
-                } else {
-                    dataObject.put("selectedDate", selectedDate);
-                }
+        try {
+            if (isDaily) {
+                dataObject.put("daily", week);
+            } else {
+                dataObject.put("selectedDate", selectedDate);
             }
-            catch (Exception e){}
-            dataObject.put("StartHour", startHour);
-            dataObject.put("StartMinute", startMinute);
-            dataObject.put("ReturnHour", returnHour);
-            dataObject.put("ReturnMinute", returnMinute);
-            dataObject.put("Smoke", allowSmoking);
-            dataObject.put("Money", money);
-            dataObject.put("Passenger", passenger);
-            dataObject.put("LatitudeDestination", latitudeDestination.toString());
-            dataObject.put("LongitudeDestination", longitudeDestination.toString());
-            dataObject.put("LatitudeSource", latitudeSource.toString());
-            dataObject.put("LongitudeSource", longitudeSource.toString());
-            dataObject.put("Source", sourceDetail);
-            dataObject.put("Destination", destinationDetail);
-            dataObject.put("Car", carType.getText().toString());
-            dataObject.put("Tel", tel.getText().toString());
-            dataObject.put("Mail", email.getText().toString());
-            dataObject.put("Description", description.getText().toString());
-            //String createBy = currentUser.getObjectId();
-            dataObject.put("CreateBy", currentUser);
-            String ownerName = currentUser.getString("name");
-            dataObject.put("OwnerName", ownerName);
-            HashMap fb = (HashMap)currentUser.get("profile");
-            dataObject.put("FacebookId", fb.get("facebookId"));
-            dataObject.saveInBackground();
+        }
+        catch (Exception e){}
+        dataObject.put("StartHour", startHour);
+        dataObject.put("Route", routeIndex.toString());
+        dataObject.put("StartMinute", startMinute);
+        dataObject.put("ReturnHour", returnHour);
+        dataObject.put("ReturnMinute", returnMinute);
+        dataObject.put("Smoke", allowSmoking);
+        dataObject.put("Money", money);
+        dataObject.put("Passenger", passenger);
+        dataObject.put("LatitudeDestination", latitudeDestination.toString());
+        dataObject.put("LongitudeDestination", longitudeDestination.toString());
+        dataObject.put("LatitudeSource", latitudeSource.toString());
+        dataObject.put("LongitudeSource", longitudeSource.toString());
+        dataObject.put("Source", sourceDetail);
+        dataObject.put("Destination", destinationDetail);
+        dataObject.put("Car", carType.getText().toString());
+        dataObject.put("Tel", tel.getText().toString());
+        dataObject.put("Mail", email.getText().toString());
+        dataObject.put("Description", description.getText().toString());
+        //String createBy = currentUser.getObjectId();
+        dataObject.put("CreateBy", currentUser);
+        String ownerName = currentUser.getString("name");
+        dataObject.put("OwnerName", ownerName);
+        HashMap fb = (HashMap)currentUser.get("profile");
+        dataObject.put("FacebookId", fb.get("facebookId"));
+        dataObject.saveInBackground();
         //add tripId to User table
         final ParseQuery<ParseObject> user = ParseQuery.getQuery("_User");
         user.getInBackground(currentUser.getObjectId(), new GetCallback<ParseObject>() {
